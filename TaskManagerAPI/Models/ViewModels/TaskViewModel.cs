@@ -1,6 +1,8 @@
-﻿namespace TaskManagerAPI.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace TaskManagerAPI.Models.ViewModels
 {
-    public class TaskItem
+    public class TaskViewModel
     {
         public int Id { get; set; }
         public string? Name { get; set; }
@@ -8,7 +10,5 @@
         public bool IsCompleted { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime DueDate { get; set; }
-        public string ApplicationUserId { get; set; } 
-        public ApplicationUser ApplicationUser { get; set; }
     }
 }

@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Runtime.CompilerServices;
 using System.Text;
 using TaskManagerAPI.Data;
+using TaskManagerAPI.DbInitializer;
 using TaskManagerAPI.Interfaces;
 using TaskManagerAPI.Models;
 using TaskManagerAPI.Services;
@@ -28,9 +29,17 @@ namespace TaskManagerAPI.Extensions
                 options.Cookie.IsEssential = true;
             });
 
-            services.AddIdentity<ApplicationUser, IdentityRole>()
+            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+                options.Password.RequireNonAlphanumeric = true;
+                options.Password.RequiredLength = 12;
+                options.Password.RequireDigit = true;
+                options.Password.RequireLowercase = true;
+                options.Password.RequireUppercase = true;
+            })
                 .AddEntityFrameworkStores<DataContext>()
                 .AddDefaultTokenProviders();
+            services.AddScoped<IDbInitializer, DbInitializer.DbInitializer>();
             services.AddControllers();
             services.AddCors();
 
@@ -38,7 +47,7 @@ namespace TaskManagerAPI.Extensions
             services.AddScoped<ITokenService, TokenService>();
 
             // Ensure JWT token is valid
-            var secretKey = config["AppStings:tokenkey"] ?? throw new ArgumentNullException("JWT Secret Token is missing from the configuration.");
+            var secretKey = config["AppSettings:TokenKey"] ?? throw new ArgumentNullException("JWT Secret Token is missing from the configuration.");
             // Configure the JWT Authentication
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>

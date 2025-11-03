@@ -21,12 +21,7 @@ namespace TaskManagerAPI.Services
 
         public string CreateToken(ApplicationUser user)
         {
-            var secretKey = _config["AppSettings: TokenKey"];
-            // Check If The Secret Key is null or empty.
-            if (string.IsNullOrEmpty(secretKey))
-            {
-                throw new ArgumentNullException("Token key is missing from configuration.");
-            }
+            var secretKey = _config["AppSettings:TokenKey"] ?? throw new ArgumentNullException("JWT Secret Token is missing from the configuration.");
 
             // Create The Symmatric Security Key And Signing Credits
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
