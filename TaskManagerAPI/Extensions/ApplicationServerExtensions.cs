@@ -61,7 +61,8 @@ namespace TaskManagerAPI.Extensions
                     };
                 });
 
-
+            // Enable Automapper
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             return services;
         }

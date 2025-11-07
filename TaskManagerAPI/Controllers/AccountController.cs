@@ -78,7 +78,7 @@ namespace TaskManagerAPI.Controllers
             var result = await _userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
                 return BadRequest(new { message = "Error creating user.", errors = result.Errors });
-
+            await _userManager.AddToRoleAsync(user, model.Role);
             return Ok(new { 
                 message = "User registered successfully.", 
                 username = user.UserName,
