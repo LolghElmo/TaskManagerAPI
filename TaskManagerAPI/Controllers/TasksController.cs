@@ -17,14 +17,14 @@ namespace TaskManagerAPI.Controllers
     public class TasksController : Controller
     {
         private readonly DataContext _dataContext;
-        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
+        private readonly ILogger<TasksController> _logger;
 
-        public TasksController(DataContext dataContext, UserManager<ApplicationUser> userManager, IMapper mapper)
+        public TasksController(DataContext dataContext, IMapper mapper, ILogger<TasksController> logger)
         {
             _dataContext = dataContext;
-            _userManager = userManager;
             _mapper = mapper;
+            _logger = logger;
         }
         [HttpPost]
         public async Task<IActionResult> CreateTask([FromBody] CreateTaskDto model)
@@ -32,9 +32,15 @@ namespace TaskManagerAPI.Controllers
             
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (currentUserId == null)
-                return Unauthorized();
+            {
+                // Log warning
+                _logger.LogWarning("Unauthorized task creation attempt.");
+
+                return Unauthorized(new { message = "Invalid User." });
+            }
 
             var task = _mapper.Map<TaskItem>(model);
             task.ApplicationUserId = currentUserId;
@@ -44,6 +50,9 @@ namespace TaskManagerAPI.Controllers
             await _dataContext.Items.AddAsync(task);
             await _dataContext.SaveChangesAsync();
 
+            // Log information
+            _logger.LogInformation("Task created with ID: {TaskId} by User ID: {UserId}", task.Id, currentUserId);
+
             return CreatedAtAction(nameof(GetTask), new { id = task.Id }, _mapper.Map<TaskDto>(task));
         }
         [HttpGet]
@@ -51,11 +60,19 @@ namespace TaskManagerAPI.Controllers
         {
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (currentUserId == null)
-                return Unauthorized();
+            {
+                // Log warning
+                _logger.LogWarning("Unauthorized task creation attempt.");
+
+                return Unauthorized(new { message = "Invalid User." });
+            }
 
             var tasks = await _dataContext.Items
                         .Where(t => t.ApplicationUserId == currentUserId)
                         .ToListAsync();
+
+            // Log information
+            _logger.LogInformation("Retrieved {TaskCount} tasks for User ID: {UserId}", tasks.Count, currentUserId);
 
             return Ok(_mapper.Map<IEnumerable<TaskDto>>(tasks));
         }
@@ -67,8 +84,22 @@ namespace TaskManagerAPI.Controllers
             var task = await _dataContext.Items
                         .FirstOrDefaultAsync(t => t.Id == id);
 
-            if (task == null) return NotFound();
-            if (task.ApplicationUserId != currentUserId) return Forbid();
+            if (task == null)
+            {
+                // Log information
+                _logger.LogInformation("Task with ID: {TaskId} not found.", id);
+
+                return NotFound(new { message = "Task not found."});
+            }
+            if (task.ApplicationUserId != currentUserId)
+            {
+                // Log error
+                _logger.LogError("User ID: {UserId} attempted to access Task ID: {TaskId} without permission.", currentUserId, id);
+
+                return Forbid();
+            }
+            // Log information
+            _logger.LogInformation("Task with ID: {TaskId} retrieved by User ID: {UserId}.", id, currentUserId);
 
             return Ok(_mapper.Map<TaskDto>(task));
         }

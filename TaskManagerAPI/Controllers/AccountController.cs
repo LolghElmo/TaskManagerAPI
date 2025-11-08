@@ -13,26 +13,23 @@ namespace TaskManagerAPI.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private readonly DataContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ITokenService _tokenService;
-        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IMapper _mapper;
+        private readonly ILogger<AccountController> _logger;
 
-        public AccountController(DataContext context,
-            UserManager<ApplicationUser> userManager,
+        public AccountController(UserManager<ApplicationUser> userManager,
             ITokenService tokenService,
-            RoleManager<IdentityRole> roleManager,
             SignInManager<ApplicationUser> signInManager,
-            IMapper mapper)
+            IMapper mapper,
+            ILogger<AccountController> logger)
         {
-            _context = context;
             _userManager = userManager;
             _tokenService = tokenService;
-            _roleManager = roleManager;
             _signInManager = signInManager;
             _mapper = mapper;
+            _logger = logger;
         }
 
         [HttpPost("login")]
@@ -40,12 +37,24 @@ namespace TaskManagerAPI.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
             var user = await _userManager.FindByNameAsync(model.Email);
+            // Handle Invalid user
             if (user == null)
+            {
+                // Log warning
+                _logger.LogWarning("Failed login attempt for email: {Email}", model.Email);
                 return Unauthorized(new { message = "Invalid Email, username or password." });
+            }
+
             var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
+
             if (!result.Succeeded)
+            {
+                // Log warning
+                _logger.LogWarning("Failed login attempt (wrong password) for email: {Email}", model.Email);
                 return Unauthorized(new { message = "Invalid Email, username or password." });
+            }
 
             // Store username is session
             HttpContext.Session.SetString("Username", user.UserName);
@@ -53,7 +62,14 @@ namespace TaskManagerAPI.Controllers
             // Generate token
             var token = _tokenService.CreateToken(user);
             if (token == null)
+            {
+                // Log critical error
+                _logger.LogCritical("Token generation failed for user: {Username}", user.UserName);
                 return Unauthorized(new { message = "Error generating token." });
+            }
+
+            // Log Information
+            _logger.LogInformation("User {Username} logged in successfully. Email: {email}", user.UserName, user.Email);
 
             return Ok(new LoginResponseDto
             {
@@ -71,7 +87,11 @@ namespace TaskManagerAPI.Controllers
 
             // Check If user already exists
             if(await _userManager.FindByNameAsync(model.Email) != null)
-                return BadRequest(new { message = "User with this email already exists." });
+            {
+                // Log warning
+                _logger.LogWarning("Registration attempt with existing email: {Email}", model.Email);
+                return Unauthorized(new { message = "User with this email already exists." });
+            }
 
             // Create new user
             var user = _mapper.Map<ApplicationUser>(model);
@@ -79,11 +99,16 @@ namespace TaskManagerAPI.Controllers
 
             var result = await _userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
+            {
+                // Log error
+                _logger.LogError("User creation failed for email: {Email}. Errors: {Errors}", model.Email, result.Errors);
                 return BadRequest(new { message = "Error creating user.", errors = result.Errors });
+            }
 
             // Assign role to user
             await _userManager.AddToRoleAsync(user, model.Role);
-
+            // Log Information
+            _logger.LogInformation("User {Username} registered successfully with role {Role}. With Email: {Email}", user.UserName, model.Role, user.Email);
             return Ok(_mapper.Map<UserDto>(user));
         }
     }
