@@ -1,11 +1,18 @@
+using Serilog;
 using TaskManagerAPI.DbInitializer;
 using TaskManagerAPI.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+// Configure Serilog
+builder.Host.SerilogConfiguration();
+
 // Add services to the container.
 builder.Services.AddApplicationService(builder.Configuration);
 
+// Enable AutoMapper
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -33,6 +40,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+// Automatic HTTP Request Logging with Serilog
+app.UseSerilogRequestLogging();
 
 app.UseHttpsRedirection();
 app.UseCors(builder=> builder

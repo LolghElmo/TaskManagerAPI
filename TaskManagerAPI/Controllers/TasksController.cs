@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 using System.Security.Claims;
 using TaskManagerAPI.Data;
 using TaskManagerAPI.Models;
@@ -28,6 +29,7 @@ namespace TaskManagerAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateTask([FromBody] CreateTaskDto model)
         {
+            
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
