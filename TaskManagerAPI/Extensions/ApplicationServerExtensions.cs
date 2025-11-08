@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
 using System.Runtime.CompilerServices;
 using System.Text;
 using TaskManagerAPI.Data;
@@ -19,7 +20,6 @@ namespace TaskManagerAPI.Extensions
         {
             var conString = config.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection String 'DefaultConnection' not found");
             services.AddDbContext<DataContext>(options => options.UseSqlite(conString));
-
             //Configuration Session Options
             services.AddDistributedMemoryCache();
             services.AddSession(options =>
@@ -61,10 +61,15 @@ namespace TaskManagerAPI.Extensions
                     };
                 });
 
-            // Enable Automapper
-            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             return services;
+        }
+        public static void SerilogConfiguration(this IHostBuilder host)
+        {
+            host.UseSerilog((context, loggerConfig) =>
+            {
+                loggerConfig.WriteTo.Console();
+            });
         }
     }
 }
