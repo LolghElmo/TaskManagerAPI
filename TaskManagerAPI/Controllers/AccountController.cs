@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TaskManagerAPI.Data;
 using TaskManagerAPI.Interfaces;
 using TaskManagerAPI.Models;
-using TaskManagerAPI.Models.ViewModels;
+using TaskManagerAPI.Models.DTOs.User;
 
 namespace TaskManagerAPI.Controllers
 {
@@ -17,22 +18,25 @@ namespace TaskManagerAPI.Controllers
         private readonly ITokenService _tokenService;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IMapper _mapper;
 
         public AccountController(DataContext context,
             UserManager<ApplicationUser> userManager,
             ITokenService tokenService,
             RoleManager<IdentityRole> roleManager,
-            SignInManager<ApplicationUser> signInManager)
+            SignInManager<ApplicationUser> signInManager,
+            IMapper mapper)
         {
             _context = context;
             _userManager = userManager;
             _tokenService = tokenService;
             _roleManager = roleManager;
             _signInManager = signInManager;
+            _mapper = mapper;
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult> Login([FromBody] LoginViewModels model)
+        public async Task<ActionResult<LoginResponseDto>> Login([FromBody] LoginDto model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -42,6 +46,7 @@ namespace TaskManagerAPI.Controllers
             var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
             if (!result.Succeeded)
                 return Unauthorized(new { message = "Invalid Email, username or password." });
+
             // Store username is session
             HttpContext.Session.SetString("Username", user.UserName);
 
@@ -50,16 +55,16 @@ namespace TaskManagerAPI.Controllers
             if (token == null)
                 return Unauthorized(new { message = "Error generating token." });
 
-            return Ok(new
+            return Ok(new LoginResponseDto
             {
-                message = "Login successful.",
-                username = user.UserName,
-                token = token
+                Message = "Login successful.",
+                Username = user.UserName,
+                Token = token
             });
         }
 
         [HttpPost("Register")]
-        public async Task<ActionResult> Register([FromBody] RegisterViewModel model)
+        public async Task<ActionResult<UserDto>> Register([FromBody] RegisterDto model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -69,20 +74,17 @@ namespace TaskManagerAPI.Controllers
                 return BadRequest(new { message = "User with this email already exists." });
 
             // Create new user
-            var user = new ApplicationUser
-            {
-                UserName = model.Email,
-                Email = model.Email,
-                Name = model.Name
-            };
+            var user = _mapper.Map<ApplicationUser>(model);
+            user.UserName = model.Email;
+
             var result = await _userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
                 return BadRequest(new { message = "Error creating user.", errors = result.Errors });
+
+            // Assign role to user
             await _userManager.AddToRoleAsync(user, model.Role);
-            return Ok(new { 
-                message = "User registered successfully.", 
-                username = user.UserName,
-            });
+
+            return Ok(_mapper.Map<UserDto>(user));
         }
     }
 }

@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TaskManagerAPI.Models.ViewModels
+namespace TaskManagerAPI.Models.DTOs.Task
 {
-    public class CreateTaskViewModel
+    public class CreateTaskDto
     {
         [Required]
         public string Name { get; set; }

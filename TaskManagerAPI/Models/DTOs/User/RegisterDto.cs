@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TaskManagerAPI.Models.ViewModels
+namespace TaskManagerAPI.Models.DTOs.User
 {
-    public class RegisterViewModel
+    public class RegisterDto
     {
         [Required]
         public string Name { get; set; }
