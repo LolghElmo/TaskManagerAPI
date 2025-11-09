@@ -14,7 +14,7 @@ namespace TaskManagerAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class TasksController : Controller
+    public class TasksController : ControllerBase
     {
         private readonly DataContext _dataContext;
         private readonly IMapper _mapper;
