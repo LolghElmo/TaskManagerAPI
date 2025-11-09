@@ -13,7 +13,6 @@ namespace TaskManagerAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class TasksController : Controller
     {
         private readonly DataContext _dataContext;
@@ -26,6 +25,7 @@ namespace TaskManagerAPI.Controllers
             _mapper = mapper;
             _logger = logger;
         }
+
         [HttpPost]
         public async Task<IActionResult> CreateTask([FromBody] CreateTaskDto model)
         {
