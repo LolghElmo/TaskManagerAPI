@@ -7,11 +7,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 
-// Enable AutoMapper
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // Configure Serilog
 builder.Host.SerilogConfiguration();
+
+// Enable AutoMapper
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // Add services to the container.
 builder.Services.AddApplicationService(builder.Configuration);
