@@ -9,8 +9,10 @@ using Microsoft.Extensions.Logging;
 using Serilog;
 using System.Security.Claims;
 using TaskManagerAPI.Data;
+using TaskManagerAPI.Interfaces;
 using TaskManagerAPI.Models;
 using TaskManagerAPI.Models.DTOs.Task;
+using TaskManagerAPI.Repositories;
 
 namespace TaskManagerAPI.Controllers
 {
@@ -19,13 +21,12 @@ namespace TaskManagerAPI.Controllers
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class TasksController : Controller
     {
-        private readonly DataContext _dataContext;
-        private readonly IMapper _mapper;
+        private readonly ITaskRepository _taskRepository; private readonly IMapper _mapper;
         private readonly ILogger<TasksController> _logger;
 
-        public TasksController(DataContext dataContext, IMapper mapper, ILogger<TasksController> logger)
+        public TasksController(ITaskRepository taskRepository, IMapper mapper, ILogger<TasksController> logger)
         {
-            _dataContext = dataContext;
+            _taskRepository = taskRepository;
             _mapper = mapper;
             _logger = logger;
         }
@@ -33,8 +34,6 @@ namespace TaskManagerAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateTask([FromBody] CreateTaskDto model)
         {
-
-
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
@@ -52,16 +51,15 @@ namespace TaskManagerAPI.Controllers
             task.CreatedDate = DateTime.UtcNow;
             task.IsCompleted= false;
 
-            await _dataContext.Tasks.AddAsync(task);
-            await _dataContext.SaveChangesAsync();
-
+            // Save the task using the repository
+            var createdTask = await _taskRepository.CreateTaskAsync(task);
             // Log information
-            _logger.LogInformation("Task created with ID: {TaskId} by User ID: {UserId}", task.Id, currentUserId);
-
-            return CreatedAtAction(nameof(GetTask), new { id = task.Id }, _mapper.Map<TaskDto>(task));
+            _logger.LogInformation("Task created with ID: {TaskId} by User ID: {UserId}", createdTask.Id, currentUserId);
+            // Return the created task with a 201 status code
+            return CreatedAtAction(nameof(GetTask), new { id = createdTask.Id }, _mapper.Map<TaskDto>(createdTask));
         }
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TaskDto>>> GetMyTasks()
+        public async Task<ActionResult<IEnumerable<TaskDto>>> GetAllTasks()
         {
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (currentUserId == null)
@@ -72,12 +70,10 @@ namespace TaskManagerAPI.Controllers
                 return Unauthorized(new { message = "Invalid User." });
             }
 
-            var tasks = await _dataContext.Tasks
-                        .Where(t => t.ApplicationUserId == currentUserId)
-                        .ToListAsync();
+            var tasks = await _taskRepository.GetTasksForUserAsync(currentUserId);
 
             // Log information
-            _logger.LogInformation("Retrieved {TaskCount} tasks for User ID: {UserId}", tasks.Count, currentUserId);
+            _logger.LogInformation("Retrieved {TaskCount} tasks for User ID: {UserId}", tasks.Count(), currentUserId);
 
             return Ok(_mapper.Map<IEnumerable<TaskDto>>(tasks));
         }
@@ -86,8 +82,7 @@ namespace TaskManagerAPI.Controllers
         {
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var task = await _dataContext.Tasks
-                        .FirstOrDefaultAsync(t => t.Id == id);
+            var task = await _taskRepository.GetTaskAsync(currentUserId, id);
 
             if (task == null)
             {

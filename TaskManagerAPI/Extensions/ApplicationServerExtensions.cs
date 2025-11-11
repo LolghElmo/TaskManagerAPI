@@ -39,7 +39,12 @@ namespace TaskManagerAPI.Extensions
             })
                 .AddEntityFrameworkStores<DataContext>()
                 .AddDefaultTokenProviders();
+
+            // Injection
             services.AddScoped<IDbInitializer, DbInitializer.DbInitializer>();
+            services.AddScoped<ITaskRepository, Repositories.TaskRepository>();
+
+            // Add Controllers and CORS
             services.AddControllers();
             services.AddCors();
 

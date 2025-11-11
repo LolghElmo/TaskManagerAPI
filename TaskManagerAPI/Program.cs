@@ -20,6 +20,7 @@ builder.Services.AddApplicationService(builder.Configuration);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
+# region AI generated untest code
 // --- 2. REPLACE AddSwaggerGen() WITH THIS ---
 builder.Services.AddSwaggerGen(options =>
 {
@@ -51,6 +52,7 @@ builder.Services.AddSwaggerGen(options =>
         }
     });
 });
+# endregion
 
 var app = builder.Build();
 
