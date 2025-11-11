@@ -60,7 +60,7 @@ namespace TaskManagerAPI.Extensions
                         ValidateIssuer = false,
                         ValidateAudience = false
                     };
-                });
+        });
 
 
             return services;

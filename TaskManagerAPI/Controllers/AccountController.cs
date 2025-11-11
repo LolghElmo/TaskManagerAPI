@@ -11,6 +11,7 @@ namespace TaskManagerAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+
     public class AccountController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;

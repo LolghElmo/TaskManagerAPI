@@ -12,7 +12,7 @@ namespace TaskManagerAPI.Data
 
         }
 
-        public DbSet<TaskItem> Items { get; set; }
+        public DbSet<TaskItem> Tasks { get; set; }
         public DbSet<ApplicationUser> User { get; set; }
     }
 }

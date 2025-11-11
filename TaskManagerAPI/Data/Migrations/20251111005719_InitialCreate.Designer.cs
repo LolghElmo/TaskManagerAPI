@@ -8,17 +8,17 @@ using TaskManagerAPI.Data;
 
 #nullable disable
 
-namespace TaskManagerAPI.Data.Migrations
+namespace TaskManagerAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20251104161217_UserTaskRelationship")]
-    partial class UserTaskRelationship
+    [Migration("20251111005719_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.0");
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.11");
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -244,7 +244,7 @@ namespace TaskManagerAPI.Data.Migrations
 
                     b.HasIndex("ApplicationUserId");
 
-                    b.ToTable("Items");
+                    b.ToTable("Tasks");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

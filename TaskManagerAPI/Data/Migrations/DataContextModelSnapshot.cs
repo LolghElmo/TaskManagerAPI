@@ -7,7 +7,7 @@ using TaskManagerAPI.Data;
 
 #nullable disable
 
-namespace TaskManagerAPI.Data.Migrations
+namespace TaskManagerAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
     partial class DataContextModelSnapshot : ModelSnapshot
@@ -15,7 +15,7 @@ namespace TaskManagerAPI.Data.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.0");
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.11");
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -218,6 +218,10 @@ namespace TaskManagerAPI.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("TEXT");
 
@@ -235,7 +239,9 @@ namespace TaskManagerAPI.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Items");
+                    b.HasIndex("ApplicationUserId");
+
+                    b.ToTable("Tasks");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -287,6 +293,22 @@ namespace TaskManagerAPI.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("TaskManagerAPI.Models.TaskItem", b =>
+                {
+                    b.HasOne("TaskManagerAPI.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany("Tasks")
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
+                });
+
+            modelBuilder.Entity("TaskManagerAPI.Models.ApplicationUser", b =>
+                {
+                    b.Navigation("Tasks");
                 });
 #pragma warning restore 612, 618
         }
