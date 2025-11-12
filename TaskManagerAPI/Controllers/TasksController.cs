@@ -70,6 +70,7 @@ namespace TaskManagerAPI.Controllers
                 return Unauthorized(new { message = "Invalid User." });
             }
 
+            // Get tasks using the repository
             var tasks = await _taskRepository.GetTasksForUserAsync(currentUserId);
 
             // Log information
@@ -81,23 +82,21 @@ namespace TaskManagerAPI.Controllers
         public async Task<ActionResult<TaskDto>> GetTask(int id)
         {
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
+            if (currentUserId == null)
+            {
+                _logger.LogWarning("Unauthorized task retrieval attempt.");
+                return Unauthorized(new { message = "Invalid User." });
+            }
+            // Get the task using the repository
             var task = await _taskRepository.GetTaskAsync(currentUserId, id);
 
             if (task == null)
             {
-                // Log information
-                _logger.LogInformation("Task with ID: {TaskId} not found.", id);
-
-                return NotFound(new { message = "Task not found."});
+                // Log Information
+                _logger.LogInformation("Task with ID: {TaskId} not found for User ID: {UserId}.", id, currentUserId);
+                return NotFound(new { message = "Task not found." });
             }
-            if (task.ApplicationUserId != currentUserId)
-            {
-                // Log error
-                _logger.LogError("User ID: {UserId} attempted to access Task ID: {TaskId} without permission.", currentUserId, id);
 
-                return Forbid();
-            }
             // Log information
             _logger.LogInformation("Task with ID: {TaskId} retrieved by User ID: {UserId}.", id, currentUserId);
 

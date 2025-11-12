@@ -25,10 +25,10 @@ namespace TaskManagerAPI.Repositories
 
         public async Task<TaskItem?> GetTaskAsync(string userId,int taskId)
         {
-            // Find the task by its ID
+            // Find the task by its ID & UserID
             var task = await _dataContext.Tasks.FirstOrDefaultAsync(t => t.Id == taskId);
-            // Ensure the task belongs to the specified user and task exists
-            return task == null ? null : task.ApplicationUserId == userId ? task : null;
+            return await _dataContext.Tasks
+                .FirstOrDefaultAsync(t => t.Id == taskId && t.ApplicationUserId == userId);
         }
 
         public async Task<IEnumerable<TaskItem>> GetTasksForUserAsync(string userId)
