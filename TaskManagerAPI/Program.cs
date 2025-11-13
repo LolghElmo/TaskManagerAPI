@@ -1,4 +1,4 @@
-using Microsoft.OpenApi;
+using Scalar.AspNetCore;
 using Serilog;
 using TaskManagerAPI.DbInitializer;
 using TaskManagerAPI.Extensions;
@@ -20,39 +20,7 @@ builder.Services.AddApplicationService(builder.Configuration);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
-# region AI generated untest code
-// --- 2. REPLACE AddSwaggerGen() WITH THIS ---
-builder.Services.AddSwaggerGen(options =>
-{
-    // Define the Bearer token security scheme
-    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        Name = "Authorization",
-        Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n" +
-                      "Enter 'Bearer' [space] and then your token in the text input below." +
-                      "\r\n\r\nExample: \"Bearer 12345abcdef\"",
-        In = ParameterLocation.Header,
-        Type = SecuritySchemeType.ApiKey,
-        Scheme = "Bearer"
-    });
-
-    // Add a global security requirement to use Bearer auth
-    options.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-            new string[] {}
-        }
-    });
-});
-# endregion
+builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
@@ -73,8 +41,8 @@ using (var scope = app.Services.CreateScope())
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.MapOpenApi();
+    app.MapScalarApiReference();
 }
 
 // Automatic HTTP Request Logging with Serilog
