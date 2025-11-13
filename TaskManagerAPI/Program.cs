@@ -42,7 +42,16 @@ using (var scope = app.Services.CreateScope())
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-    app.MapScalarApiReference();
+    app.MapScalarApiReference(options =>
+    {
+        options.AddPreferredSecuritySchemes("Bearer");
+        options.AddHttpAuthentication("BearerAuth", auth =>
+        {
+            auth.Token = null;
+        });
+
+        options.EnablePersistentAuthentication();
+    });
 }
 
 // Automatic HTTP Request Logging with Serilog
