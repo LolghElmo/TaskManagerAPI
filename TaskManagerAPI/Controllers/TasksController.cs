@@ -111,6 +111,7 @@ namespace TaskManagerAPI.Controllers
                 _logger.LogWarning("Unauthorized task finish attempt.");
                 return Unauthorized(new { message = "Invalid User." });
             }
+            // Get the task using the repository
             var task = await _taskRepository.GetTaskAsync(currentUserId, id);
             if (task == null)
             {
@@ -131,6 +132,7 @@ namespace TaskManagerAPI.Controllers
             return Ok(_mapper.Map<TaskDto>(updatedTask));
         }
         #endregion
+
         #region ADMIN CRUD OPERATIONS
         [HttpDelete("{id}")]
         [Authorize(Roles = "Admin")]
@@ -169,6 +171,7 @@ namespace TaskManagerAPI.Controllers
             }
             // Map updated fields
             _mapper.Map(model, task);
+            // Update the task using the repository
             var updatedTask = await _taskRepository.UpdateTaskAsync(task);
             if (updatedTask == null)
             {
