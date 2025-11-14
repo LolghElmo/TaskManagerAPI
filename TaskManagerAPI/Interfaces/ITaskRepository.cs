@@ -12,8 +12,10 @@ namespace TaskManagerAPI.Interfaces
         Task<IEnumerable<TaskItem>> GetTasksForUserAsync(string userId);
         // Finish Task
         Task<TaskItem> FinishTaskAsync(TaskItem task);
+        // Get Task By TaskID (ADMIN)
+        Task<TaskItem?> GetTaskByIdAdminAsync(int taskId);
         // Delete Tasks (ADMIN)
-        Task<bool> DeleteTaskAsync(string userId);
+        Task<bool> DeleteTaskAsync(TaskItem task);
         // Update Task (ADMIN)
         Task<TaskItem?> UpdateTaskAsync(TaskItem task);
 

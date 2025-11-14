@@ -13,6 +13,7 @@ namespace TaskManagerAPI.Repositories
         {
             _dataContext = context;
         }
+        #region USERS CRUDS METHODS
         public async Task<TaskItem> CreateTaskAsync(TaskItem task)
         {
             // Add the new task to the data context
@@ -21,16 +22,6 @@ namespace TaskManagerAPI.Repositories
             // Save changes to the database and return true if successful
             await _dataContext.SaveChangesAsync();
             return task;
-        }
-
-        public Task<bool> DeleteTaskAsync(string userId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<TaskItem> FinishTaskAsync(TaskItem task)
-        {
-            throw new NotImplementedException();
         }
 
         public async Task<TaskItem?> GetTaskAsync(string userId,int taskId)
@@ -50,10 +41,39 @@ namespace TaskManagerAPI.Repositories
             // Return the list of tasks
             return tasks;
         }
-
-        public Task<TaskItem?> UpdateTaskAsync(TaskItem task)
+        public async Task<TaskItem> FinishTaskAsync(TaskItem task)
         {
-            throw new NotImplementedException();
+            // Mark the task as completed
+            task.IsCompleted = true;
+            // Update the task in the data context
+            _dataContext.Tasks.Update(task);
+            await _dataContext.SaveChangesAsync();
+            return task;
         }
+        #endregion
+
+        #region ADMIN CRUDS METHODS
+
+        public async Task<TaskItem?> GetTaskByIdAdminAsync(int id)
+        {
+            // Find the task by its ID
+            return await _dataContext.Tasks.Where(t => t.Id == id).FirstOrDefaultAsync();
+        }
+        public async Task<bool> DeleteTaskAsync(TaskItem task)
+        {
+            // Remove the task from the data context
+            _dataContext.Tasks.Remove(task);
+            // Save changes to the database and return true if successful
+            return await _dataContext.SaveChangesAsync() > 0;
+        }
+
+        public async Task<TaskItem?> UpdateTaskAsync(TaskItem task)
+        {
+            // Update the task in the data context
+            _dataContext.Tasks.Update(task);
+            await _dataContext.SaveChangesAsync();
+            return task;
+        }
+        #endregion
     }
 }

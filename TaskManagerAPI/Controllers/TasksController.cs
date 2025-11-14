@@ -30,7 +30,7 @@ namespace TaskManagerAPI.Controllers
             _mapper = mapper;
             _logger = logger;
         }
-
+        #region USER CRUD OPERATIONS
         [HttpPost]
         public async Task<IActionResult> CreateTask([FromBody] CreateTaskDto model)
         {
@@ -102,5 +102,84 @@ namespace TaskManagerAPI.Controllers
 
             return Ok(_mapper.Map<TaskDto>(task));
         }
+        [HttpPatch("{id}/finish")]
+        public async Task<IActionResult> FinishTask(int id)
+        {
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (currentUserId == null)
+            {
+                _logger.LogWarning("Unauthorized task finish attempt.");
+                return Unauthorized(new { message = "Invalid User." });
+            }
+            var task = await _taskRepository.GetTaskAsync(currentUserId, id);
+            if (task == null)
+            {
+                // Log Information
+                _logger.LogInformation("Task with ID: {TaskId} not found for User ID: {UserId}.", id, currentUserId);
+                return NotFound(new { message = "Task not found." });
+            }
+            if (task.IsCompleted)
+            {
+                // Log Information
+                _logger.LogInformation("Task with ID: {TaskId} is already completed by User ID: {UserId}.", id, currentUserId);
+                return BadRequest(new { message = "Task is already completed." });
+            }
+            // Mark the task as completed
+            var updatedTask = await _taskRepository.FinishTaskAsync(task);
+            // Log information
+            _logger.LogInformation("Task with ID: {TaskId} marked as completed by User ID: {UserId}.", id, currentUserId);
+            return Ok(_mapper.Map<TaskDto>(updatedTask));
+        }
+        #endregion
+        #region ADMIN CRUD OPERATIONS
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteTask(int id)
+        {
+            var task = await _taskRepository.GetTaskByIdAdminAsync(id);
+            if (task == null)
+            {
+                // Log Information
+                _logger.LogInformation("Admin attempted to delete non-existent Task ID: {TaskId}.", id);
+                return NotFound(new { message = "Task not found." });
+            }
+            var result = await _taskRepository.DeleteTaskAsync(task);
+            if (!result)
+            {
+                // Log Error
+                _logger.LogError("Failed to delete Task ID: {TaskId} by Admin.", id);
+                return StatusCode(500, new { message = "Failed to delete task." });
+            }
+            // Log information
+            _logger.LogInformation("Task ID: {TaskId} deleted by Admin.", id);
+            return NoContent();
+        }
+        [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> UpdateTask(int id, [FromBody] UpdateTaskDto model)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            var task = await _taskRepository.GetTaskByIdAdminAsync(id);
+            if (task == null)
+            {
+                // Log Information
+                _logger.LogInformation("Admin attempted to update non-existent Task ID: {TaskId}.", id);
+                return NotFound(new { message = "Task not found." });
+            }
+            // Map updated fields
+            _mapper.Map(model, task);
+            var updatedTask = await _taskRepository.UpdateTaskAsync(task);
+            if (updatedTask == null)
+            {
+                // Log Error
+                _logger.LogError("Failed to update Task ID: {TaskId} by Admin.", id);
+                return StatusCode(500, new { message = "Failed to update task." });
+            }
+            // Log information
+            _logger.LogInformation("Task ID: {TaskId} updated by Admin.", id);
+            return Ok(_mapper.Map<TaskDto>(updatedTask));
+        }
+        #endregion
     }
 }
