@@ -23,6 +23,16 @@ namespace TaskManagerAPI.Repositories
             return task;
         }
 
+        public Task<bool> DeleteTaskAsync(string userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<TaskItem> FinishTaskAsync(TaskItem task)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<TaskItem?> GetTaskAsync(string userId,int taskId)
         {
             // Find the task by its ID & UserID
@@ -41,5 +51,9 @@ namespace TaskManagerAPI.Repositories
             return tasks;
         }
 
+        public Task<TaskItem?> UpdateTaskAsync(TaskItem task)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
