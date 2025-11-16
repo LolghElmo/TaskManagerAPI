@@ -43,15 +43,15 @@ namespace TaskManagerAPI.Infrastructure.Extensions
 
             // Injection
             services.AddScoped<IDbInitializer, DbInitializer>();
-            //services.AddScoped<ITaskRepository, Repositories.TaskRepository>();
+            services.AddScoped<ITaskRepository, Repositories.TaskRepository>();
 
             // Add Controllers and CORS
             services.AddControllers();
             services.AddCors();
 
             // Services
-/*            services.AddScoped<ITokenService, TokenService>();
-*/
+            services.AddScoped<ITokenService, Services.TokenService>();
+
             // Ensure JWT token is valid
             var secretKey = config["AppSettings:TokenKey"] ?? throw new ArgumentNullException("JWT Secret Token is missing from the configuration.");
 
