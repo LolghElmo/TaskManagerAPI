@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
 using System.Text;
 using TaskManagerAPI.Core.Interfaces;
 using TaskManagerAPI.Core.Models;
@@ -68,6 +70,14 @@ namespace TaskManagerAPI.Infrastructure.Extensions
 
 
             return services;
+        }
+
+        public static void SerilogConfiguration(this IHostBuilder host)
+        {
+            host.UseSerilog((context, loggerConfig) =>
+            {
+                loggerConfig.ReadFrom.Configuration(context.Configuration);
+            });
         }
     }
 }
