@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
 VisualStudioVersion = 18.3.11206.111
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManagerAPI", "TaskManagerAPI\TaskManagerAPI.csproj", "{0029CE0D-327C-43AD-AC57-7D3FCE766477}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManagerAPI.Core", "TaskManagerAPI.Core\TaskManagerAPI.Core.csproj", "{2B7AF09B-ED23-4FD8-8DF2-07421CDDAA4B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManagerAPI.Infrastructure", "TaskManagerAPI.Infrastructure\TaskManagerAPI.Infrastructure.csproj", "{41C222CC-2BD6-4737-BD08-27B8B0DEE033}"
@@ -17,10 +15,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{0029CE0D-327C-43AD-AC57-7D3FCE766477}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0029CE0D-327C-43AD-AC57-7D3FCE766477}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0029CE0D-327C-43AD-AC57-7D3FCE766477}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0029CE0D-327C-43AD-AC57-7D3FCE766477}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2B7AF09B-ED23-4FD8-8DF2-07421CDDAA4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2B7AF09B-ED23-4FD8-8DF2-07421CDDAA4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2B7AF09B-ED23-4FD8-8DF2-07421CDDAA4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
