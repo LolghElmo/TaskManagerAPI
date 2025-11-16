@@ -1,7 +1,9 @@
+using AutoMapper;
 using Scalar.AspNetCore;
 using Serilog;
 using TaskManagerAPI.Core.Interfaces;
 using TaskManagerAPI.Infrastructure.Extensions;
+using TaskManagerAPI.WebApi.Mappers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +15,10 @@ builder.Host.SerilogConfiguration();
 builder.Services.AddApplicationService(builder.Configuration);
 
 // Enable AutoMapper
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddAutoMapper(options =>
+{
+    options.AddProfile<AutoMapperProfiles>();
+});
 
 // Add services to the container.
 builder.Services.AddControllers();
