@@ -1,4 +1,6 @@
-﻿namespace TaskManagerAPI.Models.DTOs.Task
+﻿using Microsoft.Build.Framework;
+
+namespace TaskManagerAPI.Models.DTOs.Task
 {
     public class UpdateTaskDto
     {
