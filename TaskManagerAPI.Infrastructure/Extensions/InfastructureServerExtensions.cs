@@ -13,9 +13,9 @@ using TaskManagerAPI.Infrastructure.Data;
 
 namespace TaskManagerAPI.Infrastructure.Extensions
 {
-    public static class ApplicationServerExtensions
+    public static class InfastructureServerExtensions
     {
-        public static IServiceCollection AddApplicationService(this IServiceCollection services, IConfiguration config)
+        public static IServiceCollection AddInfastructureService(this IServiceCollection services, IConfiguration config)
         {
             // Get Connection String and Configure DbContext
             var conString = config.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection String 'DefaultConnection' not found");

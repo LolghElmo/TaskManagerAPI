@@ -30,7 +30,7 @@ namespace TaskManagerAPI.WebApi.Controllers
             _mapper = mapper;
             _logger = logger;
         }
-
+/*
         [HttpPost("login")]
         public async Task<ActionResult<LoginResponseDto>> Login([FromBody] LoginDto model)
         {
@@ -109,6 +109,6 @@ namespace TaskManagerAPI.WebApi.Controllers
             // Log Information
             _logger.LogInformation("User {Username} registered successfully with role {Role}. With Email: {Email}", user.UserName, model.Role, user.Email);
             return Ok(_mapper.Map<UserDto>(user));
-        }
+        }*/
     }
 }
