@@ -34,13 +34,8 @@ namespace TaskManagerAPI.WebApi.Controllers
             }
 
             // Create the command
-            var command = new CreateTaskCommand
-            {
-                UserId = currentUserId,
-                Name = model.Name,
-                Description = model.Description,
-                DueDate = model.DueDate
-            };
+            var command = new CreateTaskCommand(currentUserId, model.Name, model.Description, model.DueDate);
+
 
             // Send the command to MediatR
             var createdTask = await _mediator.Send(command);
@@ -61,10 +56,7 @@ namespace TaskManagerAPI.WebApi.Controllers
             }
 
             // Create the query
-            var query = new GetAllTasksQuery
-            {
-                UserId = currentUserId
-            };
+            var query = new GetAllTasksQuery(currentUserId);
 
             // Send the query to MediatR
             var tasks = await _mediator.Send(query);

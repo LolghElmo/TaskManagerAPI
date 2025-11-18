@@ -25,9 +25,7 @@ namespace TaskManagerAPI.Application.Mappers
 
             // Command mappings
             CreateMap<CreateTaskCommand, TaskItem>();
-            CreateMap<UpdateTaskCommand, TaskItem>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-                .ForMember(dest => dest.ApplicationUserId, opt => opt.MapFrom(src => src.UserId));
+
         }
     }
 }
