@@ -4,7 +4,6 @@ using Serilog;
 using TaskManagerAPI.Application;
 using TaskManagerAPI.Core.Interfaces;
 using TaskManagerAPI.Infrastructure.Extensions;
-using TaskManagerAPI.WebApi.Mappers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,12 +15,6 @@ builder.Services.AddInfastructureService(builder.Configuration);
 
 // Add Application Services
 builder.Services.AddApplicationService(builder.Configuration);
-
-// Enable AutoMapper
-builder.Services.AddAutoMapper(options =>
-{
-    options.AddProfile<AutoMapperProfiles>();
-});
 
 // Add services to the container.
 builder.Services.AddControllers();

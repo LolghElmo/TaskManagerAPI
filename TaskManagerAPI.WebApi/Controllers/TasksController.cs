@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using TaskManagerAPI.Application.Features.Tasks;
+using TaskManagerAPI.Application.Models.DTOs.Task;
 using TaskManagerAPI.Core.Interfaces;
 using TaskManagerAPI.Core.Models;
 using TaskManagerAPI.WebApi.Models.DTOs.Task;
@@ -17,28 +18,33 @@ namespace TaskManagerAPI.WebApi.Controllers
     public class TasksController : Controller
     {
         private readonly IMediator _mediator;
-        private readonly IMapper _mapper;
-        public TasksController(IMediator mediator, IMapper mapper)
+        public TasksController(IMediator mediator)
         {
             _mediator = mediator;
-            _mapper = mapper;
         }
+
         [HttpPost]
-        public async Task<IActionResult> CreateTask([FromBody] CreateTaskDto model)
+        public async Task<IActionResult> CreateTask([FromBody] CreateTaskDto model) 
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (currentUserId == null)
             {
                 return Unauthorized(new { message = "Invalid User." });
             }
-            // Map the DTO to the command
-            var command = _mapper.Map<CreateTaskCommand>(model);
-            command.UserId = currentUserId;
-            // Send the command to the mediator
+
+            var command = new CreateTaskCommand
+            {
+                UserId = currentUserId,
+                Name = model.Name,
+                Description = model.Description,
+                DueDate = model.DueDate
+            };
+
             var createdTask = await _mediator.Send(command);
-            // Return the created task with a 201 status code
+
             return CreatedAtAction(nameof(createdTask), new { id = createdTask.Id }, createdTask);
         }
 

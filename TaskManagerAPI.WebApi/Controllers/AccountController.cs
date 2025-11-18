@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TaskManagerAPI.Core.Interfaces;
 using TaskManagerAPI.Core.Models;
-using TaskManagerAPI.WebApi.Models.DTOs.User;
 
 namespace TaskManagerAPI.WebApi.Controllers
 {

@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
-using TaskManagerAPI.Core.Models;
+using TaskManagerAPI.Application.Features.Tasks;
 using TaskManagerAPI.Application.Models.DTOs.Task;
 using TaskManagerAPI.Application.Models.DTOs.User;
+using TaskManagerAPI.Core.Models;
 
 namespace TaskManagerAPI.Application.Mappers
 {
@@ -17,6 +18,9 @@ namespace TaskManagerAPI.Application.Mappers
             CreateMap<CreateTaskDto, TaskItem>();
             CreateMap<TaskItem, TaskDto>();
             CreateMap<UpdateTaskDto, TaskItem>();
+
+            // Command Mappings
+            CreateMap<CreateTaskCommand, TaskItem>();
         }
     }
 }

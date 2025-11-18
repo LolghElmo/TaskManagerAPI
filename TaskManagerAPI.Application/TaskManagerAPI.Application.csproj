@@ -13,7 +13,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TaskManagerAPI.Core\TaskManagerAPI.Core.csproj" />
-    <ProjectReference Include="..\TaskManagerAPI.Infrastructure\TaskManagerAPI.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>

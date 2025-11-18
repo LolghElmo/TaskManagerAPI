@@ -39,17 +39,11 @@ namespace TaskManagerAPI.Application.Features.Tasks
             }
             // Map the command to TaskItem entity
             var task = _mapper.Map<TaskItem>(request);
-            task.ApplicationUserId = request.UserId;
-            task.Name = request.Name;
-            task.Description = request.Description;
             task.CreatedDate = DateTime.UtcNow;
             task.IsCompleted = false;
-            task.DueDate = request.DueDate;
 
-            // Create the task in the repository and get the created task plus save changes
+            // Create the task in the repository
             var createdTask = await _taskRepository.CreateTaskAsync(task);
-
-            // Log the creation of the task
             _logger.LogInformation("Task created with ID: {TaskId} by User ID: {UserId}", createdTask.Id, request.UserId);
 
             // Map the created task to TaskDto and return
