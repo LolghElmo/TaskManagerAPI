@@ -12,7 +12,6 @@ namespace TaskManagerAPI.Application.Features.Tasks
     public class GetAllTasksQuery : IRequest<IEnumerable<TaskDto>>
     {
         public string? UserId { get; set; }
-        public int TaskId { get; set; }
     }
 
     public class GetAllTasksQueryHandler : IRequestHandler<GetAllTasksQuery, IEnumerable<TaskDto>>
@@ -29,7 +28,7 @@ namespace TaskManagerAPI.Application.Features.Tasks
         public async Task<IEnumerable<TaskDto>> Handle(GetAllTasksQuery request, CancellationToken cancellationToken)
         {
             // Retrieve tasks from the repository
-            var tasks = await _taskRepository.GetTaskAsync(request.UserId, request.TaskId);
+            var tasks = await _taskRepository.GetTasksForUserAsync(request.UserId);
 
             // Map the tasks to TaskDto
             var taskDtos = _mapper.Map<IEnumerable<TaskDto>>(tasks);

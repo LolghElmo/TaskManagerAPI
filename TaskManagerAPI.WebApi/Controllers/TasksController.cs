@@ -46,7 +46,7 @@ namespace TaskManagerAPI.WebApi.Controllers
             var createdTask = await _mediator.Send(command);
 
             // Return the created task with a 201 status code
-            return CreatedAtAction(nameof(createdTask), new { id = createdTask.Id }, createdTask);
+            return CreatedAtAction(nameof(GetTaskById), new { id = createdTask.Id }, createdTask);
         }
 
 
@@ -59,13 +59,16 @@ namespace TaskManagerAPI.WebApi.Controllers
             {
                 return Unauthorized(new { message = "Invalid User." });
             }
+
             // Create the query
             var query = new GetAllTasksQuery
             {
                 UserId = currentUserId
             };
+
             // Send the query to MediatR
             var tasks = await _mediator.Send(query);
+
             // Return the tasks
             return Ok(tasks);
         }
