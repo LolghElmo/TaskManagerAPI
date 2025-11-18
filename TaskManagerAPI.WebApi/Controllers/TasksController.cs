@@ -1,14 +1,10 @@
-﻿using AutoMapper;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using TaskManagerAPI.Application.Features.Tasks;
 using TaskManagerAPI.Application.Models.DTOs.Task;
-using TaskManagerAPI.Core.Interfaces;
-using TaskManagerAPI.Core.Models;
-using TaskManagerAPI.WebApi.Models.DTOs.Task;
 
 namespace TaskManagerAPI.WebApi.Controllers
 {
@@ -29,12 +25,15 @@ namespace TaskManagerAPI.WebApi.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            // Get the current user ID from the JWT token
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             if (currentUserId == null)
             {
                 return Unauthorized(new { message = "Invalid User." });
             }
 
+            // Create the command
             var command = new CreateTaskCommand
             {
                 UserId = currentUserId,
@@ -43,9 +42,65 @@ namespace TaskManagerAPI.WebApi.Controllers
                 DueDate = model.DueDate
             };
 
+            // Send the command to MediatR
             var createdTask = await _mediator.Send(command);
 
+            // Return the created task with a 201 status code
             return CreatedAtAction(nameof(createdTask), new { id = createdTask.Id }, createdTask);
+        }
+
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<TaskDto>>> GetAllTasks()
+        {
+            // Get the current user ID from the JWT token
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (currentUserId == null)
+            {
+                return Unauthorized(new { message = "Invalid User." });
+            }
+            // Create the query
+            var query = new GetAllTasksQuery
+            {
+                UserId = currentUserId
+            };
+            // Send the query to MediatR
+            var tasks = await _mediator.Send(query);
+            // Return the tasks
+            return Ok(tasks);
+        }
+        [HttpGet("{id}")]
+        public async Task<ActionResult<TaskDto>> GetTaskById(int id)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            // Get the current user ID from the JWT token
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            // Check if user is authenticated
+            if (currentUserId == null)
+            {
+                return Unauthorized(new { message = "Invalid User." });
+            }
+
+            // Create the query
+            var query = new GetTaskByIdQuery
+            {
+                UserId = currentUserId,
+                TaskId = id
+            };
+
+            // Send the query to MediatR
+            var task = await _mediator.Send(query);
+
+            if (task == null)
+            {
+                return NotFound(new { message = "Task not found." });
+            }
+
+            // Return the task
+            return Ok(task);
         }
 
     }

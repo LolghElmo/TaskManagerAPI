@@ -33,10 +33,6 @@ namespace TaskManagerAPI.Application.Features.Tasks
 
         public async Task<TaskDto> Handle(CreateTaskCommand request, CancellationToken cancellationToken)
         {
-            if (string.IsNullOrEmpty(request.Name))
-            {
-                throw new Exception("User ID cannot be null.");
-            }
             // Map the command to TaskItem entity
             var task = _mapper.Map<TaskItem>(request);
             task.CreatedDate = DateTime.UtcNow;
