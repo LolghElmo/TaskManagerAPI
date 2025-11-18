@@ -19,7 +19,7 @@ namespace TaskManagerAPI.WebApi.Controllers
             _mediator = mediator;
         }
 
-        [HttpPost]
+        [HttpPost("CreateTask")]
         public async Task<IActionResult> CreateTask([FromBody] CreateTaskDto model) 
         {
             if (!ModelState.IsValid)
@@ -50,7 +50,7 @@ namespace TaskManagerAPI.WebApi.Controllers
         }
 
 
-        [HttpGet]
+        [HttpGet("GetAllTasks")]
         public async Task<ActionResult<IEnumerable<TaskDto>>> GetAllTasks()
         {
             // Get the current user ID from the JWT token
@@ -69,7 +69,7 @@ namespace TaskManagerAPI.WebApi.Controllers
             // Return the tasks
             return Ok(tasks);
         }
-        [HttpGet("{id}")]
+        [HttpGet("GetTaskById/{id}")]
         public async Task<ActionResult<TaskDto>> GetTaskById(int id)
         {
             if (!ModelState.IsValid)

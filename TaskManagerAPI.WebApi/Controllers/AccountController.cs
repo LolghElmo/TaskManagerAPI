@@ -17,7 +17,7 @@ namespace TaskManagerAPI.WebApi.Controllers
         private readonly IMediator _mediator;
 
         public AccountController(IMediator mediator)
-        {s
+        {
             _mediator = mediator;
         }
 
