@@ -11,14 +11,13 @@ using TaskManagerAPI.Core.Models;
 
 namespace TaskManagerAPI.Application.Features.Tasks
 {
-    public class CreateTaskCommand : IRequest<TaskDto>
-    {
-        public string? UserId { get; set; }
-        public string? Name { get; set; }
-        public string? Description { get; set; }
-        public DateTime DueDate { get; set; }
-    }
+    // Command to create a new task
+    public record CreateTaskCommand(string UserId,
+                                    string Name,
+                                    string? Description,
+                                    DateTime DueDate) : IRequest<TaskDto>;
 
+    // Handler for creating a new task
     public class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand, TaskDto>
     {
         private readonly ITaskRepository _taskRepository;
@@ -34,16 +33,19 @@ namespace TaskManagerAPI.Application.Features.Tasks
         public async Task<TaskDto> Handle(CreateTaskCommand request, CancellationToken cancellationToken)
         {
             // Map the command to TaskItem entity
+
             var task = _mapper.Map<TaskItem>(request);
             task.CreatedDate = DateTime.UtcNow;
+            task.ApplicationUserId = request.UserId;
             task.IsCompleted = false;
 
             // Create the task in the repository
-            var createdTask = await _taskRepository.CreateTaskAsync(task);
-            _logger.LogInformation("Task created with ID: {TaskId} by User ID: {UserId}", createdTask.Id, request.UserId);
+
+            var created = await _taskRepository.CreateTaskAsync(task);
+            _logger.LogInformation("Task created with ID: {TaskId} by User ID: {UserId}", created.Id, created.ApplicationUserId);
 
             // Map the created task to TaskDto and return
-            return _mapper.Map<TaskDto>(createdTask);
+            return _mapper.Map<TaskDto>(created);
         }
     }
 }

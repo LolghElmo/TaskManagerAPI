@@ -29,12 +29,11 @@ namespace TaskManagerAPI.Infrastructure.Repositories
 
         public async Task<TaskItem?> GetTaskAsync(string userId, int taskId)
         {
-            // Find the task by its ID & UserID
-            var task = await _dataContext.Tasks.FirstOrDefaultAsync(t => t.Id == taskId);
+            // Retrieve the task by its ID and user ID
             return await _dataContext.Tasks
+                .AsNoTracking()
                 .FirstOrDefaultAsync(t => t.Id == taskId && t.ApplicationUserId == userId);
         }
-
         public async Task<IEnumerable<TaskItem>> GetTasksForUserAsync(string userId)
         {
             // Retrieve all tasks for the specified user

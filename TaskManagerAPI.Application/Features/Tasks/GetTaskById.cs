@@ -9,11 +9,7 @@ using TaskManagerAPI.Core.Interfaces;
 
 namespace TaskManagerAPI.Application.Features.Tasks
 {
-    public class GetTaskByIdQuery : IRequest<TaskDto>
-    {
-        public string? UserId { get; set; }
-        public int TaskId { get; set; }
-    }
+    public record GetTaskByIdQuery(string UserId = default!, int TaskId = default!) : IRequest<TaskDto>;
 
     public class GetTaskByIdQueryHandler : IRequestHandler<GetTaskByIdQuery, TaskDto>
     {
@@ -33,6 +29,8 @@ namespace TaskManagerAPI.Application.Features.Tasks
 
             // Log the fetching of the task
             _logger.LogInformation("Fetched task with ID {TaskId} for user {UserId}", request.TaskId, request.UserId);
+
+            // Map the task entity to TaskDto and return
             return _mapper.Map<TaskDto>(task);
         }
     }

@@ -9,11 +9,10 @@ using TaskManagerAPI.Core.Interfaces;
 
 namespace TaskManagerAPI.Application.Features.Tasks
 {
-    public class GetAllTasksQuery : IRequest<IEnumerable<TaskDto>>
-    {
-        public string? UserId { get; set; }
-    }
+    // Query to get all tasks for a specific user
+    public record GetAllTasksQuery(string UserId = default!) : IRequest<IEnumerable<TaskDto>>;
 
+    // Handler for retrieving all tasks for a user
     public class GetAllTasksQueryHandler : IRequestHandler<GetAllTasksQuery, IEnumerable<TaskDto>>
     {
         private readonly ITaskRepository _taskRepository;

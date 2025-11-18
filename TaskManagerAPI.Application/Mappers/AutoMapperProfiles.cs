@@ -10,17 +10,24 @@ namespace TaskManagerAPI.Application.Mappers
     {
         public AutoMapperProfiles()
         {
-            // User Mappings
-            CreateMap<RegisterDto, ApplicationUser>();
+            // User mappings
+            CreateMap<RegisterDto, ApplicationUser>()
+                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Email));
             CreateMap<ApplicationUser, UserDto>();
 
-            // Task Mappings
+            // Task mappings
             CreateMap<CreateTaskDto, TaskItem>();
+            CreateMap<UpdateTaskDto, TaskItem>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedDate, opt => opt.Ignore())
+                .ForMember(dest => dest.ApplicationUserId, opt => opt.Ignore());
             CreateMap<TaskItem, TaskDto>();
-            CreateMap<UpdateTaskDto, TaskItem>();
 
-            // Command Mappings
+            // Command mappings
             CreateMap<CreateTaskCommand, TaskItem>();
+            CreateMap<UpdateTaskCommand, TaskItem>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.ApplicationUserId, opt => opt.MapFrom(src => src.UserId));
         }
     }
 }
