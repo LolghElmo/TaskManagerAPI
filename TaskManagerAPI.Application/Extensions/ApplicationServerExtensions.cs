@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using TaskManagerAPI.Application.Mappers;
 
-namespace TaskManagerAPI.Application
+namespace TaskManagerAPI.Application.Extensions
 {
     public static class ApplicationServerExtensions
     {

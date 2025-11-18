@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
+using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Cryptography.X509Certificates;
+using TaskManagerAPI.Application.Features.Account;
 using TaskManagerAPI.Core.Interfaces;
 using TaskManagerAPI.Core.Models;
 
@@ -11,103 +14,45 @@ namespace TaskManagerAPI.WebApi.Controllers
 
     public class AccountController : Controller
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly ITokenService _tokenService;
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly IMapper _mapper;
-        private readonly ILogger<AccountController> _logger;
+        private readonly IMediator _mediator;
 
-        public AccountController(UserManager<ApplicationUser> userManager,
-            ITokenService tokenService,
-            SignInManager<ApplicationUser> signInManager,
-            IMapper mapper,
-            ILogger<AccountController> logger)
-        {
-            _userManager = userManager;
-            _tokenService = tokenService;
-            _signInManager = signInManager;
-            _mapper = mapper;
-            _logger = logger;
+        public AccountController(IMediator mediator)
+        {s
+            _mediator = mediator;
         }
-/*
+
         [HttpPost("login")]
-        public async Task<ActionResult<LoginResponseDto>> Login([FromBody] LoginDto model)
+        public async Task<IActionResult> Login([FromBody] LoginUserCommand command)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var user = await _userManager.FindByNameAsync(model.Email);
-            // Handle Invalid user
-            if (user == null)
+            // Validate the incoming command
+            try
             {
-                // Log warning
-                _logger.LogWarning("Failed login attempt for email: {Email}", model.Email);
-                return Unauthorized(new { message = "Invalid Email, username or password." });
+                // Send the command to the mediator
+                var result = await _mediator.Send(command);
+                return Ok(result);
             }
-
-            var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
-
-            if (!result.Succeeded)
+            catch (Exception ex)
             {
-                // Log warning
-                _logger.LogWarning("Failed login attempt (wrong password) for email: {Email}", model.Email);
-                return Unauthorized(new { message = "Invalid Email, username or password." });
+                // Log the exception (not shown here for brevity)
+                return Unauthorized(new { message = ex.Message });
             }
-
-            // Store username is session
-            HttpContext.Session.SetString("Username", user.UserName);
-
-            // Generate token
-            var token = _tokenService.CreateToken(user);
-            if (token == null)
-            {
-                // Log critical error
-                _logger.LogCritical("Token generation failed for user: {Username}", user.UserName);
-                return Unauthorized(new { message = "Error generating token." });
-            }
-
-            // Log Information
-            _logger.LogInformation("User {Username} logged in successfully. Email: {email}", user.UserName, user.Email);
-
-            return Ok(new LoginResponseDto
-            {
-                Message = "Login successful.",
-                Username = user.UserName,
-                Token = token
-            });
+            
         }
-
-        [HttpPost("Register")]
-        public async Task<ActionResult<UserDto>> Register([FromBody] RegisterDto model)
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] RegisterUserCommand command)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            // Check If user already exists
-            if (await _userManager.FindByNameAsync(model.Email) != null)
+            // Validate the incoming command
+            try
             {
-                // Log warning
-                _logger.LogWarning("Registration attempt with existing email: {Email}", model.Email);
-                return Unauthorized(new { message = "User with this email already exists." });
+                // Send the command to the mediator
+                var result = await _mediator.Send(command);
+                return Ok(result);
             }
-
-            // Create new user
-            var user = _mapper.Map<ApplicationUser>(model);
-            user.UserName = model.Email;
-
-            var result = await _userManager.CreateAsync(user, model.Password);
-            if (!result.Succeeded)
+            catch (Exception ex)
             {
-                // Log error
-                _logger.LogError("User creation failed for email: {Email}. Errors: {Errors}", model.Email, result.Errors);
-                return BadRequest(new { message = "Error creating user.", errors = result.Errors });
+                // Log the exception (not shown here for brevity)
+                return BadRequest(new { message = ex.Message });
             }
-
-            // Assign role to user
-            await _userManager.AddToRoleAsync(user, model.Role);
-            // Log Information
-            _logger.LogInformation("User {Username} registered successfully with role {Role}. With Email: {Email}", user.UserName, model.Role, user.Email);
-            return Ok(_mapper.Map<UserDto>(user));
-        }*/
+        }
     }
 }

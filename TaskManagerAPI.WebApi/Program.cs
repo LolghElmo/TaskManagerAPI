@@ -1,12 +1,12 @@
-using AutoMapper;
 using Scalar.AspNetCore;
 using Serilog;
-using TaskManagerAPI.Application;
+using TaskManagerAPI.Application.Extensions;
 using TaskManagerAPI.Core.Interfaces;
 using TaskManagerAPI.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
+#region Builder Start up Configurations
 // Serilog Configuration
 builder.Host.SerilogConfiguration();
 
@@ -16,6 +16,7 @@ builder.Services.AddInfastructureService(builder.Configuration);
 // Add Application Services
 builder.Services.AddApplicationService(builder.Configuration);
 
+#endregion 
 // Add services to the container.
 builder.Services.AddControllers();
 
