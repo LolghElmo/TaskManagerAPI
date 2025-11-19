@@ -13,22 +13,15 @@ using TaskManagerAPI.Infrastructure.Data;
 
 namespace TaskManagerAPI.Infrastructure.Extensions
 {
-    public static class InfastructureServerExtensions
+    public static class InfrastructureServiceCollectionExtensions
     {
-        public static IServiceCollection AddInfastructureService(this IServiceCollection services, IConfiguration config)
+        public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration config)
         {
             // Get Connection String and Configure DbContext
-            var conString = config.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection String 'DefaultConnection' not found");
-            services.AddDbContext<DataContext>(options => options.UseSqlite(conString));
+            var connectionString = config.GetConnectionString("DefaultConnection")
+                ?? throw new InvalidOperationException("Connection String 'DefaultConnection' not found");
 
-            //Configuration Session Options
-            services.AddDistributedMemoryCache();
-            services.AddSession(options =>
-            {
-                options.IdleTimeout = TimeSpan.FromMinutes(30);
-                options.Cookie.HttpOnly = true;
-                options.Cookie.IsEssential = true;
-            });
+            services.AddDbContext<DataContext>(options => options.UseSqlite(connectionString));
 
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
@@ -44,16 +37,11 @@ namespace TaskManagerAPI.Infrastructure.Extensions
             // Injection
             services.AddScoped<IDbInitializer, DbInitializer>();
             services.AddScoped<ITaskRepository, Repositories.TaskRepository>();
-
-            // Add Controllers and CORS
-            services.AddControllers();
-            services.AddCors();
-
-            // Services
             services.AddScoped<ITokenService, Services.TokenService>();
 
             // Ensure JWT token is valid
-            var secretKey = config["AppSettings:TokenKey"] ?? throw new ArgumentNullException("JWT Secret Token is missing from the configuration.");
+            var secretKey = config["AppSettings:TokenKey"] 
+                ?? throw new ArgumentNullException("JWT Secret Token is missing from the configuration.");
 
             // Configure the JWT Authentication
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -72,7 +60,7 @@ namespace TaskManagerAPI.Infrastructure.Extensions
             return services;
         }
 
-        public static void SerilogConfiguration(this IHostBuilder host)
+        public static void ConfigureSerilog(this IHostBuilder host)
         {
             host.UseSerilog((context, loggerConfig) =>
             {

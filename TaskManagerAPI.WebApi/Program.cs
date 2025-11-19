@@ -7,24 +7,39 @@ using TaskManagerAPI.Infrastructure.Extensions;
 var builder = WebApplication.CreateBuilder(args);
 
 #region Builder Start up Configurations
+
 // Serilog Configuration
-builder.Host.SerilogConfiguration();
+builder.Host.ConfigureSerilog();
 
 // Add Infrastructure Services
-builder.Services.AddInfastructureService(builder.Configuration);
+builder.Services.AddInfrastructureServices(builder.Configuration);
 
 // Add Application Services
-builder.Services.AddApplicationService(builder.Configuration);
+builder.Services.AddApplicationServices();
 
 #endregion 
+
 // Add services to the container.
 builder.Services.AddControllers();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
+
 // Add Endpoints API Explorer for Scaler
 builder.Services.AddEndpointsApiExplorer();
+
+// Configure Session
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+builder.Services.AddCors();
+
 
 var app = builder.Build();
 

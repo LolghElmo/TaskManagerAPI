@@ -7,16 +7,18 @@ using TaskManagerAPI.Application.Mappers;
 
 namespace TaskManagerAPI.Application.Extensions
 {
-    public static class ApplicationServerExtensions
+    public static class ApplicationServiceCollectionExtensions
     {
-        public static IServiceCollection AddApplicationService(this IServiceCollection services, IConfiguration config)
+        public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
             services.AddMediatR(cfg =>
                 cfg.RegisterServicesFromAssembly(typeof(AutoMapperProfiles).Assembly));
+
             services.AddAutoMapper(options =>
             {
                 options.AddProfile<AutoMapperProfiles>();
             });
+
             return services;
         }
     }
