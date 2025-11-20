@@ -11,8 +11,7 @@ namespace TaskManagerAPI.Application.Extensions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
-            services.AddMediatR(cfg =>
-                cfg.RegisterServicesFromAssembly(typeof(AutoMapperProfiles).Assembly));
+            services.AddMediatR(cfg =>cfg.RegisterServicesFromAssembly(typeof(AutoMapperProfiles).Assembly));
 
             services.AddAutoMapper(options =>
             {
