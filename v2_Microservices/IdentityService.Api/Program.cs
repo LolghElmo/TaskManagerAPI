@@ -1,3 +1,4 @@
+using IdentityService.Domain.Interfaces;
 using IdentityService.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,6 +26,13 @@ builder.Services.AddCors();
 
 // Build the app
 var app = builder.Build();
+
+// Initialize Database
+using (var scope = app.Services.CreateScope())
+{
+    var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
+    dbInitializer.Initialize();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

@@ -17,10 +17,10 @@ namespace IdentityService.Infrastructure.Extensions
 {
     public static  class InfrastructureServiceCollectionExtensions
     {
-        public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration config)
         {
             // Ensure Database Connection String is valid
-            var conString = configuration.GetConnectionString("DefaultConnection")
+            var conString = config.GetConnectionString("DefaultConnection")
                 ?? throw new InvalidOperationException("Invalid Connection String 'DefaultConnection' not found");
 
             // Add DbContext and Identity
@@ -42,10 +42,15 @@ namespace IdentityService.Infrastructure.Extensions
             // Injection
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IDbInitializer, DbInitializer>();
 
-            // Ensure JWT token is valid
-            var secretKey = configuration["JwtSettings:SecretKey"]
+            // Ensure JWT settings are valid
+            var secretKey = config["JwtSettings:SecretKey"]
                 ?? throw new InvalidOperationException("JWT Secret Key not found in configuration");
+            var issuer = config["JwtSettings:Issuer"]
+                ?? throw new InvalidOperationException("JWT Issuer not found in configuration");
+            var audience = config["JwtSettings:Audience"]
+                ?? throw new InvalidOperationException("JWT Audience not found in configuration");
 
             // Add Authentication with JWT Bearer
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -55,8 +60,12 @@ namespace IdentityService.Infrastructure.Extensions
                     {
                         ValidateIssuerSigningKey = true,
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
-                        ValidateIssuer = false,
-                        ValidateAudience = false
+                        ValidateIssuer = true,
+                        ValidIssuer = issuer,
+                        ValidateAudience = true,
+                        ValidAudience = audience,
+                        ValidateLifetime = true,
+                        ClockSkew = TimeSpan.Zero
                     };
                 });
 
