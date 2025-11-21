@@ -1,18 +1,21 @@
 using IdentityService.Application.Extensions;
 using IdentityService.Domain.Interfaces;
 using IdentityService.Infrastructure.Extensions;
+using Scalar.AspNetCore;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-// Add Infrastructure Services
-builder.Services.AddInfrastructureServices(builder.Configuration);
+// Configure Serilog
+builder.Host.AddSerilog();
 
 // Add Application Services
 builder.Services.AddApplicationServices(builder.Configuration);
 
-// Configure Serilog
-builder.Host.AddSerilog();
+// Add Infrastructure Services
+builder.Services.AddInfrastructureServices(builder.Configuration);
+
+
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -47,10 +50,19 @@ using (var scope = app.Services.CreateScope())
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.MapScalarApiReference();
 }
+
+
+app.UseSerilogRequestLogging();
 
 app.UseHttpsRedirection();
 
+app.UseCors(builder => builder
+    .AllowCredentials()
+    .AllowAnyHeader()
+    .AllowAnyMethod()
+    .WithOrigins("http://localhost:3000"));
 // Use Session
 app.UseAuthentication();
 

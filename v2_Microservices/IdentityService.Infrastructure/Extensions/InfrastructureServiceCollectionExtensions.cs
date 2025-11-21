@@ -27,7 +27,7 @@ namespace IdentityService.Infrastructure.Extensions
             services.AddDbContext<DataContext>(options => {
                 options.UseSqlite(conString);
             });
-            services.AddIdentity<User, Roles>( options =>
+            services.AddIdentity<User, IdentityRole>( options =>
             {
                 options.Password.RequireDigit = true;
                 options.Password.RequireLowercase = true;
@@ -43,7 +43,7 @@ namespace IdentityService.Infrastructure.Extensions
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IDbInitializer, DbInitializer>();
-
+            
             // Ensure JWT settings are valid
             var secretKey = config["JwtSettings:SecretKey"]
                 ?? throw new InvalidOperationException("JWT Secret Key not found in configuration");

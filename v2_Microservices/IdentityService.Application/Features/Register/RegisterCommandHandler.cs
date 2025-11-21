@@ -13,9 +13,9 @@ namespace IdentityService.Application.Features.Register
     public class RegisterCommandHandler : IRequestHandler<RegisterCommand, Result<UserDto>>
     {
         private readonly IAuthService _authService;
-        private readonly ILogger _logger;
+        private readonly ILogger<RegisterCommandHandler> _logger;
         private readonly IMapper _mapper;
-        public RegisterCommandHandler(IAuthService authService, ILogger logger, IMapper mappers)
+        public RegisterCommandHandler(IAuthService authService, ILogger<RegisterCommandHandler> logger, IMapper mappers)
         {
             _authService = authService;
             _logger = logger;

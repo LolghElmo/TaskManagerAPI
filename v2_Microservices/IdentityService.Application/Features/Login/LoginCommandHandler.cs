@@ -13,9 +13,9 @@ namespace IdentityService.Application.Features.Login
     public class LoginCommandHandler : IRequestHandler<LoginCommand, Result<LoginResponseDto>>
     {
         private readonly IAuthService _authService;
-        private readonly ILogger _logger;
+        private readonly ILogger<LoginCommandHandler> _logger;
         private readonly IMapper _mapper;
-        public LoginCommandHandler(IAuthService authService, ILogger logger, IMapper mapper)
+        public LoginCommandHandler(IAuthService authService, ILogger<LoginCommandHandler> logger, IMapper mapper)
         {
             _authService = authService;
             _logger = logger;
