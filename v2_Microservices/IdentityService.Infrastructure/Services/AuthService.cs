@@ -27,35 +27,47 @@ namespace IdentityService.Infrastructure.Services
             _tokenService = tokenService;
         }
 
-        public async Task<Result<string>> LoginAsync(string email, string password)
+        public async Task<Result<(User User, string Token)>> LoginAsync(string identifier, string password)
         {
-            // Find the user by email
-            var user = await _userManager.FindByNameAsync(email);
-            if (user == null) return Result<string>.Failure("Invalid login attempt.");
+            // Try to find user by email
+            var user = await _userManager.FindByEmailAsync(identifier);
 
-            // Check the password
-            var result = await _signInManager.CheckPasswordSignInAsync(user, password, false);
-            if (!result.Succeeded) return Result<string>.Failure("Invalid login attempt.");
-
-            // Generate JWT token
-            var token = _tokenService.GenerateToken(user);
-
-            // Return the token
-            return Result<string>.Success(token);
-
-        }
-
-        public async Task<Result<bool>> RegisterAsync(string email, string password, string firstName, string lastName)
-        {
-            // Check if user already exists
-            if (await _userManager.FindByEmailAsync(email) != null)
+            // If not found by email, try username
+            if (user == null)
             {
-                return Result<bool>.Failure("User already exists.");
+                user = await _userManager.FindByNameAsync(identifier);
             }
 
+            if (user == null) return Result<(User, string)>.Failure("Invalid login attempt.");
+
+            // Check password
+            var result = await _signInManager.CheckPasswordSignInAsync(user, password, false);
+            if (!result.Succeeded) return Result<(User, string)>.Failure("Invalid login attempt.");
+
+            // Generate JWT token and return
+            var token = _tokenService.GenerateToken(user);
+
+            return Result<(User, string)>.Success((user, token));
+        }
+
+        public async Task<Result<User>> RegisterAsync(string email, string username, string password, string firstName, string lastName)
+        {
+            // Check if Email exists
+            if (await _userManager.FindByEmailAsync(email) != null)
+            {
+                return Result<User>.Failure("User with this email already exists.");
+            }
+
+            // Check if Username exists
+            if (await _userManager.FindByNameAsync(username) != null)
+            {
+                return Result<User>.Failure("Username is already taken.");
+            }
+
+            // Create new user object 
             var user = new User
             {
-                UserName = email,
+                UserName = username,
                 Email = email,
                 FirstName = firstName,
                 LastName = lastName,
@@ -68,13 +80,13 @@ namespace IdentityService.Infrastructure.Services
             if (!result.Succeeded)
             {
                 var errors = string.Join(", ", result.Errors.Select(e => e.Description));
-                return Result<bool>.Failure(errors);
+                return Result<User>.Failure(errors);
             }
 
             // Assign default role
             await _userManager.AddToRoleAsync(user, "User");
 
-            return Result<bool>.Success(true);
+            return Result<User>.Success(user);
         }
     }
 }

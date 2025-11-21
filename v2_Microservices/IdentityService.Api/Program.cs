@@ -1,3 +1,4 @@
+using IdentityService.Application.Extensions;
 using IdentityService.Domain.Interfaces;
 using IdentityService.Infrastructure.Extensions;
 
@@ -7,11 +8,19 @@ var builder = WebApplication.CreateBuilder(args);
 // Add Infrastructure Services
 builder.Services.AddInfrastructureServices(builder.Configuration);
 
+// Add Application Services
+builder.Services.AddApplicationServices(builder.Configuration);
+
+// Configure Serilog
+builder.Host.AddSerilog();
+
 // Add services to the container.
 builder.Services.AddControllers();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+builder.Services.AddEndpointsApiExplorer();
 
 // Configure Session
 builder.Services.AddDistributedMemoryCache();
