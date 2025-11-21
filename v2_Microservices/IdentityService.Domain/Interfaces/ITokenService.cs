@@ -1,13 +1,13 @@
-﻿using IdenttiyService.Domain.Models;
+﻿using IdentityService.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace IdenttiyService.Domain.Interfaces
+namespace IdentityService.Domain.Interfaces
 {
     public interface ITokenService
     {
-        // Handles Token Generation
+        // Generates a JWT token 
         string GenerateToken(User user);
     }
 }
