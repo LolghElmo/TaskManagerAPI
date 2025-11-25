@@ -26,6 +26,7 @@ namespace TasksService.Infrastructure.Extensions
 
             // Injection
             services.AddScoped<ITodoRepository, TodoRepository>();
+            services.AddScoped<IDbInitializer, DbInitializer>();
 
             // Ensure JWT settings are valid
             var secretKey = configuration["JwtSettings:SecretKey"]

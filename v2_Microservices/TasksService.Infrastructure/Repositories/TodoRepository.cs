@@ -31,10 +31,11 @@ namespace TasksService.Infrastructure.Repositories
 
         public async Task<IEnumerable<TodoItem>> GetAllTodosAsync(string userId)
         {
-            return await _context.Todos
-                .Where(x => x.UserId == userId) 
-                .OrderByDescending(x => x.CreatedDate) 
-                .ToListAsync(); 
+            var todos = await _context.Todos
+                    .Where(x => x.UserId == userId)
+                    .ToListAsync(); 
+
+            return todos.OrderByDescending(x => x.CreatedDate);
         }
 
         public async Task<TodoItem?> GetTodoByIdAsync(string userId, int todoId)

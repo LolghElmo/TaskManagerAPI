@@ -31,10 +31,6 @@ namespace TasksService.Infrastructure.Data
 
             if (!_dataContext.Todos.Any())
             {
-                // Ideally, fetch these IDs from your config or environment variables
-                // so they match the IdentityService users.
-                // For now, I'll use a placeholder. When you login to Identity, 
-                // copy that User ID and paste it here for testing.
                 var myUserId = "user-guid-from-identity-service-db";
 
                 var tasks = new List<TodoItem>
