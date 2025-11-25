@@ -14,6 +14,5 @@ namespace IdentityService.Infrastructure.Data
         {
             
         }
-        public DbSet<RefreshToken> RefreshTokens { get; set; }
     }
 }
