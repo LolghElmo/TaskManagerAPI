@@ -5,13 +5,10 @@ using TasksService.Domain.Models.Enums;
 
 namespace TasksService.Application.DTOs
 {
-    public class TodoDto
+    public class CreateTodoRequest
     {
-        public int Id { get; set; }
         public required string Title { get; set; }
         public string? Description { get; set; }
-        public string Status { get; set; } = default!;
-        public string Priority { get; set; } = default!;
-        public DateTimeOffset CreatedDate { get; set; }
+        public TodoItemPriority Priority { get; set; } = TodoItemPriority.Medium;
     }
 }

@@ -1,9 +1,17 @@
+using IdentityService.Application.Extensions;
 using IdentityService.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
 // Add Infrastructure services
 builder.Services.AddInfrastructureServices(builder.Configuration);
+
+// Serilog
+builder.Host.AddSerilog();
+
+// Add Application services
+builder.Services.AddApplicationServices(builder.Configuration);
 
 // Add services to the container.
 builder.Services.AddControllers();
