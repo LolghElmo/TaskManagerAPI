@@ -1,0 +1,13 @@
+{
+  "profiles": {
+    "Docker Compose": {
+      "commandName": "DockerCompose",
+      "commandVersion": "1.0",
+      "serviceActions": {
+        "identityservice.api": "StartDebugging",
+        "tasksservice.api": "StartDebugging",
+        "gateway.api": "StartDebugging"
+      }
+    }
+  }
+}

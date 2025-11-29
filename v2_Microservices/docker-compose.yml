@@ -1,0 +1,19 @@
+services:
+
+  gateway.api:
+    image: ${DOCKER_REGISTRY-}gatewayapi
+    build:
+      context: .
+      dockerfile: Gateway.Api/Dockerfile
+  identityservice.api:
+    image: ${DOCKER_REGISTRY-}identityserviceapi
+    build:
+      context: .
+      dockerfile: IdentityService.Api/Dockerfile
+  tasksservice.api:
+    image: ${DOCKER_REGISTRY-}tasksserviceapi
+    build:
+      context: .
+      dockerfile: TasksService.Api/Dockerfile
+
+
