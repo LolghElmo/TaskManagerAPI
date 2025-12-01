@@ -7,4 +7,6 @@ var app = builder.Build();
 
 app.MapReverseProxy();
 
+app.UseHttpsRedirection();
+
 app.Run();

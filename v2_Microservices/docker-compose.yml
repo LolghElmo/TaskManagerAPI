@@ -1,19 +1,20 @@
-services:
+version: '3.4'
 
+services:
   gateway.api:
     image: ${DOCKER_REGISTRY-}gatewayapi
     build:
       context: .
-      dockerfile: Gateway.Api/Dockerfile
+      dockerfile: v2_Microservices/Gateway.Api/Dockerfile
+
   identityservice.api:
     image: ${DOCKER_REGISTRY-}identityserviceapi
     build:
       context: .
-      dockerfile: IdentityService.Api/Dockerfile
+      dockerfile: v2_Microservices/IdentityService.Api/Dockerfile
+
   tasksservice.api:
     image: ${DOCKER_REGISTRY-}tasksserviceapi
     build:
       context: .
-      dockerfile: TasksService.Api/Dockerfile
-
-
+      dockerfile: v2_Microservices/TasksService.Api/Dockerfile
