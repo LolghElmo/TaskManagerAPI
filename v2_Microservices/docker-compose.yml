@@ -5,16 +5,16 @@ services:
     image: ${DOCKER_REGISTRY-}gatewayapi
     build:
       context: .
-      dockerfile: v2_Microservices/Gateway.Api/Dockerfile
+      dockerfile: Gateway.Api/Dockerfile
 
   identityservice.api:
     image: ${DOCKER_REGISTRY-}identityserviceapi
     build:
       context: .
-      dockerfile: v2_Microservices/IdentityService.Api/Dockerfile
+      dockerfile: IdentityService.Api/Dockerfile
 
   tasksservice.api:
     image: ${DOCKER_REGISTRY-}tasksserviceapi
     build:
       context: .
-      dockerfile: v2_Microservices/TasksService.Api/Dockerfile
+      dockerfile: TasksService.Api/Dockerfile
