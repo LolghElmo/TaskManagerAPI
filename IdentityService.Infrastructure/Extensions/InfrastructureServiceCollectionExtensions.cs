@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -25,7 +26,7 @@ namespace IdentityService.Infrastructure.Extensions
 
             // Add DbContext and Identity
             services.AddDbContext<DataContext>(options => {
-                options.UseSqlite(conString);
+                options.UseAzureSql(conString);
             });
             services.AddIdentity<User, IdentityRole>( options =>
             {
