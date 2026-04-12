@@ -1,17 +1,17 @@
 using Scalar.AspNetCore;
 using Serilog;
+using TasksService.Api.Middleware;
 using TasksService.Application.Extensions;
 using TasksService.Domain.Interfaces;
 using TasksService.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Serilog
+builder.Host.AddSerilog();
 
 // Add Infrastructure services
 builder.Services.AddInfrastructure(builder.Configuration);
-
-// Serilog
-builder.Host.AddSerilog();
 
 // Add Application services
 builder.Services.AddApplication(builder.Configuration);
@@ -19,6 +19,9 @@ builder.Services.AddApplication(builder.Configuration);
 // Add services to the container.
 builder.Services.AddControllers();
 
+// Global exception handling
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
@@ -40,6 +43,9 @@ using (var scope = app.Services.CreateScope())
         logger.LogError(ex, "An error occurred while seeding the database.");
     }
 }
+
+// Must be first in the pipeline
+app.UseExceptionHandler();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

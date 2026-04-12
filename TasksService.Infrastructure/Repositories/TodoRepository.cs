@@ -29,13 +29,20 @@ namespace TasksService.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<TodoItem>> GetAllTodosAsync(string userId)
+        public async Task<(IEnumerable<TodoItem> Items, int TotalCount)> GetAllTodosAsync(string userId, int page, int pageSize)
         {
-            var todos = await _context.Todos
-                    .Where(x => x.UserId == userId)
-                    .ToListAsync(); 
+            var query = _context.Todos
+                .Where(x => x.UserId == userId)
+                .OrderByDescending(x => x.CreatedDate);
 
-            return todos.OrderByDescending(x => x.CreatedDate);
+            var totalCount = await query.CountAsync();
+
+            var items = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (items, totalCount);
         }
 
         public async Task<TodoItem?> GetTodoByIdAsync(string userId, int todoId)

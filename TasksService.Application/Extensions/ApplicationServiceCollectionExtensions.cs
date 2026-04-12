@@ -1,11 +1,11 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using FluentValidation;
+using FluentValidation.AspNetCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using TasksService.Application.Mappers;
+using TasksService.Application.Validators;
 
 namespace TasksService.Application.Extensions
 {
@@ -21,6 +21,10 @@ namespace TasksService.Application.Extensions
             {
                 options.AddProfile<AutoMapperProfile>();
             });
+
+            // Configure FluentValidation
+            services.AddValidatorsFromAssemblyContaining<CreateTodoRequestValidator>();
+            services.AddFluentValidationAutoValidation();
 
             return services;
         }

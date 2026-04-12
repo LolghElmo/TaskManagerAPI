@@ -1,3 +1,4 @@
+using IdentityService.Api.Middleware;
 using IdentityService.Application.Extensions;
 using IdentityService.Domain.Interfaces;
 using IdentityService.Infrastructure.Extensions;
@@ -36,6 +37,10 @@ builder.Services.AddSession(options =>
 
 builder.Services.AddCors();
 
+// Global exception handling
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
+
 // Build the app
 var app = builder.Build();
 
@@ -53,11 +58,14 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference();
 }
 
+// Middleware for global exception handling
+app.UseExceptionHandler();
+
+
 
 app.UseSerilogRequestLogging();
 
-// app.UseHttpsRedirection();
-
+// app.UseHttpsRedirection()
 app.UseCors(builder => builder
     .AllowCredentials()
     .AllowAnyHeader()

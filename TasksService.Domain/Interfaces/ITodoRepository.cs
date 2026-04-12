@@ -8,7 +8,7 @@ namespace TasksService.Domain.Interfaces
 {
     public interface ITodoRepository
     {
-        Task<IEnumerable<TodoItem>> GetAllTodosAsync(string userId);
+        Task<(IEnumerable<TodoItem> Items, int TotalCount)> GetAllTodosAsync(string userId, int page, int pageSize);
         Task<TodoItem?> GetTodoByIdAsync(string userId, int todoId);
         Task<TodoItem> CreateTodoAsync(TodoItem todo);
         Task UpdateTodoAsync(TodoItem todo);

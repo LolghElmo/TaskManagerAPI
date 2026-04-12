@@ -25,9 +25,20 @@ namespace TasksService.Api.Controllers
         private string GetUserId() => User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
-            var query = new GetAllTodosQuery { UserId = GetUserId() };
+            if (page < 1)
+                return BadRequest("Page must be greater than 0.");
+
+            if (pageSize < 1 || pageSize > 50)
+                return BadRequest("Page size must be between 1 and 50.");
+
+            var query = new GetAllTodosQuery
+            {
+                UserId = GetUserId(),
+                Page = page,
+                PageSize = pageSize
+            };
             var result = await _mediator.Send(query);
             return Ok(result.Value);
         }

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
-namespace IdentityService.Api.Middleware
+namespace TasksService.Api.Middleware
 {
     public class GlobalExceptionHandler : IExceptionHandler
     {
