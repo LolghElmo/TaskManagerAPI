@@ -19,7 +19,7 @@ namespace TasksService.Infrastructure.Data
         {
             try
             {
-                if (_dataContext.Database.GetPendingMigrations().Count() > 0)
+                if (_dataContext.Database.GetPendingMigrations().Any())
                 {
                     _dataContext.Database.Migrate();
                 }
@@ -27,33 +27,7 @@ namespace TasksService.Infrastructure.Data
             catch (Exception ex)
             {
                 Console.WriteLine($"Could not apply migrations: {ex.Message}");
-            }
-
-            if (!_dataContext.Todos.Any())
-            {
-                var myUserId = "user-guid-from-identity-service-db";
-
-                var tasks = new List<TodoItem>
-            {
-                new TodoItem
-                {
-                    Title = "Learn Microservices",
-                    Description = "Complete the course and build the project",
-                    UserId = myUserId,
-                    Priority = TodoItemPriority.High,
-                    Status = TodoStatus.InProgress
-                },
-                new TodoItem
-                {
-                    Title = "Setup Docker",
-                    Description = "Containerize the SQL Server",
-                    UserId = myUserId,
-                    Priority = TodoItemPriority.Medium
-                }
-            };
-
-                _dataContext.Todos.AddRange(tasks);
-                _dataContext.SaveChanges();
+                return;
             }
         }
     }

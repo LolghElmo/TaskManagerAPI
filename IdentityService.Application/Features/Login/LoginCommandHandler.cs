@@ -26,12 +26,12 @@ namespace IdentityService.Application.Features.Login
             var req = request.LoginRequest;
 
             // Attempt to register the user
-            var result = await _authService.LoginAsync(req.Email, req.Password);
+            var result = await _authService.LoginAsync(req.Identifier, req.Password);
 
             // Check if registration was successful
             if (!result.IsSuccess)
             {
-                _logger.LogWarning("Login failed for {Email}: {Error}", req.Email, result.Error);
+                _logger.LogWarning("Login failed for {Identifier}: {Error}", req.Identifier, result.Error);
                 return Result<LoginResponseDto>.Failure(result.Error ?? "Login failed");
             }
 

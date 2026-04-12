@@ -18,7 +18,7 @@ namespace IdentityService.Infrastructure.Extensions
 {
     public static  class InfrastructureServiceCollectionExtensions
     {
-        public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration config)
+        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration config)
         {
             // Ensure Database Connection String is valid
             var conString = config.GetConnectionString("DefaultConnection")
@@ -26,7 +26,7 @@ namespace IdentityService.Infrastructure.Extensions
 
             // Add DbContext and Identity
             services.AddDbContext<DataContext>(options => {
-                options.UseAzureSql(conString);
+                options.UseSqlServer(conString);
             });
             services.AddIdentity<User, IdentityRole>( options =>
             {

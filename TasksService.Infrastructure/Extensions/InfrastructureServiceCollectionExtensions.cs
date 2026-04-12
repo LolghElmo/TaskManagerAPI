@@ -14,14 +14,14 @@ namespace TasksService.Infrastructure.Extensions
 {
     public static class InfrastructureServiceCollectionExtensions
     {
-        public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
             var connectionString = configuration.GetConnectionString("DefaultConnection")
                 ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
             services.AddDbContext<DataContext>(options => 
             { 
-                options.UseSqlite(connectionString);
+                options.UseSqlServer(connectionString);
             });
 
             // Injection

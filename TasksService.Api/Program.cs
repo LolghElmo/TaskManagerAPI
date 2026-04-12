@@ -8,13 +8,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 // Add Infrastructure services
-builder.Services.AddInfrastructureServices(builder.Configuration);
+builder.Services.AddInfrastructure(builder.Configuration);
 
 // Serilog
 builder.Host.AddSerilog();
 
 // Add Application services
-builder.Services.AddApplicationServices(builder.Configuration);
+builder.Services.AddApplication(builder.Configuration);
 
 // Add services to the container.
 builder.Services.AddControllers();

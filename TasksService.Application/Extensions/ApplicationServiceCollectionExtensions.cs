@@ -11,7 +11,7 @@ namespace TasksService.Application.Extensions
 {
     public static class ApplicationServiceCollectionExtensions
     {
-        public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddApplication(this IServiceCollection services, IConfiguration configuration)
         {
             // Configure MediatR
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(AutoMapperProfile).Assembly));

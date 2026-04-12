@@ -6,8 +6,8 @@ namespace IdentityService.Application.DTOs.Auth
 {
     public class LoginRequestDto
     {
-        public required string Username { get; set; }
-        public required string Email { get; set; }
+        // Because user can login with either username or email
+        public required string Identifier { get; set; }
         public required string Password { get; set; }
     }
 }

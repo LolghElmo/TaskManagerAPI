@@ -10,10 +10,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Host.AddSerilog();
 
 // Add Application Services
-builder.Services.AddApplicationServices(builder.Configuration);
+builder.Services.AddApplication(builder.Configuration);
 
 // Add Infrastructure Services
-builder.Services.AddInfrastructureServices(builder.Configuration);
+builder.Services.AddInfrastructure(builder.Configuration);
 
 
 

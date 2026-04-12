@@ -71,7 +71,7 @@ namespace IdentityService.Infrastructure.Services
                 Email = email,
                 FirstName = firstName,
                 LastName = lastName,
-                EmailConfirmed = true // No Email Confirmation for simplicity
+                EmailConfirmed = true
             };
 
             // Create user
