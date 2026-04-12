@@ -36,6 +36,7 @@ namespace IdentityService.Infrastructure.Data
             catch (Exception ex)
             {
                 Console.WriteLine($"Could not apply migrations: {ex.Message}");
+                return;
             }
             // Create Roles if they do not exist
             if (!_roleManager.RoleExistsAsync("Admin").GetAwaiter().GetResult())
