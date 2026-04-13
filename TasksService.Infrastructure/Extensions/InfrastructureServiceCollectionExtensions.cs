@@ -16,8 +16,9 @@ namespace TasksService.Infrastructure.Extensions
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
-            var connectionString = configuration.GetConnectionString("DefaultConnection")
-                ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
+            if (string.IsNullOrWhiteSpace(connectionString))
+                throw new InvalidOperationException("Connection string 'DefaultConnection' is not configured. Add it via User Secrets or environment variables.");
 
             services.AddDbContext<DataContext>(options => 
             { 
@@ -29,8 +30,9 @@ namespace TasksService.Infrastructure.Extensions
             services.AddScoped<IDbInitializer, DbInitializer>();
 
             // Ensure JWT settings are valid
-            var secretKey = configuration["JwtSettings:SecretKey"]
-                ?? throw new InvalidOperationException("JWT Secret Key not found in configuration");
+            var secretKey = configuration["JwtSettings:SecretKey"];
+            if (string.IsNullOrWhiteSpace(secretKey))
+                throw new InvalidOperationException("JWT Secret Key is not configured. Add it via User Secrets or environment variables.");
             var issuer = configuration["JwtSettings:Issuer"]
                 ?? throw new InvalidOperationException("JWT Issuer not found in configuration");
             var audience = configuration["JwtSettings:Audience"]

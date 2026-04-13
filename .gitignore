@@ -5,6 +5,7 @@
 
 # Secrets - never commit these
 appsettings.Development.json
+.env
 *.db
 *.db-shm
 *.db-wal

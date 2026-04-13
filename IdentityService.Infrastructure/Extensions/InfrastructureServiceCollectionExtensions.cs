@@ -21,8 +21,9 @@ namespace IdentityService.Infrastructure.Extensions
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration config)
         {
             // Ensure Database Connection String is valid
-            var conString = config.GetConnectionString("DefaultConnection")
-                ?? throw new InvalidOperationException("Invalid Connection String 'DefaultConnection' not found");
+            var conString = config.GetConnectionString("DefaultConnection");
+            if (string.IsNullOrWhiteSpace(conString))
+                throw new InvalidOperationException("Connection string 'DefaultConnection' is not configured. Add it via User Secrets or environment variables.");
 
             // Add DbContext and Identity
             services.AddDbContext<DataContext>(options => {
@@ -46,8 +47,9 @@ namespace IdentityService.Infrastructure.Extensions
             services.AddScoped<IDbInitializer, DbInitializer>();
             
             // Ensure JWT settings are valid
-            var secretKey = config["JwtSettings:SecretKey"]
-                ?? throw new InvalidOperationException("JWT Secret Key not found in configuration");
+            var secretKey = config["JwtSettings:SecretKey"];
+            if (string.IsNullOrWhiteSpace(secretKey))
+                throw new InvalidOperationException("JWT Secret Key is not configured. Add it via User Secrets or environment variables.");
             var issuer = config["JwtSettings:Issuer"]
                 ?? throw new InvalidOperationException("JWT Issuer not found in configuration");
             var audience = config["JwtSettings:Audience"]
