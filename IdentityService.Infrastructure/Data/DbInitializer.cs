@@ -50,14 +50,14 @@ namespace IdentityService.Infrastructure.Data
                 // Create Admin User
                 var adminUser = new User
                 {
-                    UserName = "ghaithomo@gmail.com", 
-                    Email = "ghaithomo@gmail.com",
+                    UserName = "testmail@gmail.com", 
+                    Email = "testmail@gmail.com",
                     EmailConfirmed = true,
                     FirstName = "Ghaith", 
                     LastName = "Admin"   
                 };
 
-                var result = _userManager.CreateAsync(adminUser, "!GGmo@123456@gg").GetAwaiter().GetResult();
+                var result = _userManager.CreateAsync(adminUser, "!test@123456").GetAwaiter().GetResult();
 
                 if (result.Succeeded)
                 {
@@ -65,21 +65,7 @@ namespace IdentityService.Infrastructure.Data
                 }
             }
 
-            if (_userManager.FindByEmailAsync("ghaitho.mo@gmail.com").GetAwaiter().GetResult() == null)
-            {
-                // Create Regular User
-                var regularUser = new User
-                {
-                    UserName = "ghaitho.mo@gmail.com",
-                    Email = "ghaitho.mo@gmail.com",
-                    EmailConfirmed = true,
-                    FirstName = "Ghaith",
-                    LastName = "User"
-                };
 
-                _userManager.CreateAsync(regularUser, "!GGmo@123456@gg").GetAwaiter().GetResult();
-                _userManager.AddToRoleAsync(regularUser, "User").GetAwaiter().GetResult();
-            }
         }
     }
 }

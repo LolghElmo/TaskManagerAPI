@@ -6,6 +6,7 @@
 # Secrets - never commit these
 appsettings.Development.json
 .env
+docker-compose.override.yml
 *.db
 *.db-shm
 *.db-wal

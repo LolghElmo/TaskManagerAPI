@@ -16,8 +16,8 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
-      - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=IdentityDB;User Id=sa;Password=!GGmo@123456@gg;TrustServerCertificate=True;
-      - JwtSettings__SecretKey=Admin123!123something wrong very long and very talll string holy damn what  the helly
+      - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=IdentityDB;User Id=sa;Password=YOUR_SA_PASSWORD;TrustServerCertificate=True;
+      - JwtSettings__SecretKey=YOUR_JWT_SECRET_KEY
     ports:
       - "5001:8080"
 
@@ -25,7 +25,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
-      - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=TasksDB;User Id=sa;Password=!GGmo@123456@gg;TrustServerCertificate=True;
-      - JwtSettings__SecretKey=Admin123!123something wrong very long and very talll string holy damn what  the helly
+      - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=TasksDB;User Id=sa;Password=YOUR_SA_PASSWORD;TrustServerCertificate=True;
+      - JwtSettings__SecretKey=YOUR_JWT_SECRET_KEY
     ports:
       - "5002:8080"
