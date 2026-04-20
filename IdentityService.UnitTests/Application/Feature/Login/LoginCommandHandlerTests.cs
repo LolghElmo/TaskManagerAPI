@@ -39,14 +39,14 @@ namespace IdentityService.UnitTests.Application.Features.Login
             // Arrange
             var command = new LoginCommand
             {
-                LoginRequest = new LoginRequestDto { Username="C",Email = "a@b.com", Password = "pass" }
+                LoginRequest = new LoginRequestDto { Identifier="C", Password = "pass" }
             };
 
             var user = new User { FirstName = "A", LastName = "B", Email = "a@b.com" };
             var token = "fake-jwt-token";
 
             // Tell the Mock: "When LoginAsync is called, return Success(user, token)"
-            _authServiceMock.Setup(x => x.LoginAsync(command.LoginRequest.Email, command.LoginRequest.Password))
+            _authServiceMock.Setup(x => x.LoginAsync(command.LoginRequest.Identifier, command.LoginRequest.Password))
                 .ReturnsAsync(Result<(User, string)>.Success((user, token)));
 
             // Tell the Mapper: "When asking for UserDto, return this specific object"
