@@ -69,7 +69,7 @@ namespace IdentityService.UnitTests.Application.Features.Login
             // Arrange
             var command = new LoginCommand
             {
-                LoginRequest = new LoginRequestDto { Username="c",Email = "wrong@b.com", Password = "wrong" }
+                LoginRequest = new LoginRequestDto {Identifier="c", Password = "wrong" }
             };
 
             // Tell the Mock: "Return Failure"

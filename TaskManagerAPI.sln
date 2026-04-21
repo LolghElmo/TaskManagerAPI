@@ -5,8 +5,6 @@ VisualStudioVersion = 18.3.11218.70
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{167226BB-87F2-4987-A26E-E8E89D17DFEE}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{3EC2635A-0C45-4D7D-9997-EDFC07997AF1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IdentityService", "IdentityService", "{2206A603-EB09-4A9B-83FF-29E909F9E3AF}"
@@ -52,6 +50,10 @@ EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{81DDED9D-158B-E303-5F62-77A2896D2A5A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gateway.Api", "Gateway.Api\Gateway.Api.csproj", "{35834E5B-F5C2-4F5F-92D6-A96448CEB9EC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TasksService.IntegrationTests", "..\TasksService.IntegrationTests\TasksService.IntegrationTests.csproj", "{ABF6E19C-C3E6-42D0-97CA-32B169D0422D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TasksService.UnitTests", "..\TasksService.UnitTests\TasksService.UnitTests.csproj", "{05CA1BD1-E28C-4174-B197-86B2D46380C1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -111,6 +113,14 @@ Global
 		{35834E5B-F5C2-4F5F-92D6-A96448CEB9EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35834E5B-F5C2-4F5F-92D6-A96448CEB9EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{35834E5B-F5C2-4F5F-92D6-A96448CEB9EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ABF6E19C-C3E6-42D0-97CA-32B169D0422D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABF6E19C-C3E6-42D0-97CA-32B169D0422D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABF6E19C-C3E6-42D0-97CA-32B169D0422D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABF6E19C-C3E6-42D0-97CA-32B169D0422D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05CA1BD1-E28C-4174-B197-86B2D46380C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05CA1BD1-E28C-4174-B197-86B2D46380C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05CA1BD1-E28C-4174-B197-86B2D46380C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05CA1BD1-E28C-4174-B197-86B2D46380C1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -138,6 +148,8 @@ Global
 		{706498EC-698E-46BC-A65E-EE2FFA6E21FB} = {E6279C1E-5246-4C47-B4CD-5E31E83AB5DC}
 		{CEE0E9B6-A45B-403C-8347-CE1F8C6EAE56} = {E6279C1E-5246-4C47-B4CD-5E31E83AB5DC}
 		{35834E5B-F5C2-4F5F-92D6-A96448CEB9EC} = {C44A1BE5-2FDE-443D-ADFF-10FE4A2F08A3}
+		{ABF6E19C-C3E6-42D0-97CA-32B169D0422D} = {708FB950-AB60-4CCC-AD75-AF6BABEC0379}
+		{05CA1BD1-E28C-4174-B197-86B2D46380C1} = {708FB950-AB60-4CCC-AD75-AF6BABEC0379}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {41BFFAA1-E3B1-4305-A996-2BAAEE3D9A03}
