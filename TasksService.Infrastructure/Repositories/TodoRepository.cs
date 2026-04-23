@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore; // CRITICAL: Needed for ToListAsync, FirstOrDefaultAsync
+﻿using Microsoft.EntityFrameworkCore;
 using TasksService.Domain.Interfaces;
 using TasksService.Domain.Models;
 using TasksService.Infrastructure.Data;

@@ -55,12 +55,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TasksService.IntegrationTes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TasksService.UnitTests", "TasksService.UnitTests\TasksService.UnitTests.csproj", "{92178ED4-0F75-6FCF-4907-52E99BE00FB8}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_build", "build\_build.csproj", "{130DA418-2208-4F97-A110-FB1514DB9A37}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{130DA418-2208-4F97-A110-FB1514DB9A37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{130DA418-2208-4F97-A110-FB1514DB9A37}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A4690E08-75BA-4093-AF83-F1B26EA7F531}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A4690E08-75BA-4093-AF83-F1B26EA7F531}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A4690E08-75BA-4093-AF83-F1B26EA7F531}.Release|Any CPU.ActiveCfg = Release|Any CPU

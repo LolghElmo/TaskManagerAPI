@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TaskManagerAPI\TasksService.Api\TasksService.Api.csproj" />
+	  <ProjectReference Include="..\TasksService.Api\TasksService.Api.csproj" />
   </ItemGroup>
 
   <ItemGroup>
