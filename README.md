@@ -19,6 +19,7 @@ A microservices-based task management API built with **.NET 10**, designed as an
 - [Key Features](#key-features)
 - [Project Structure](#project-structure)
 - [API Reference](#api-reference)
+- [API Docs Preview](#api-docs-preview)
 - [Installation](#installation)
 - [Running with Docker](#running-with-docker)
 - [Testing](#testing)
@@ -145,6 +146,24 @@ Full interactive docs are available at `/scalar/v1` on each service when running
 | DELETE | `/api/todos/{id}` | JWT | Delete a todo |
 
 All `TasksService` routes are also reachable through the gateway at `http://localhost:5001/tasks/...`.
+
+---
+
+## API Docs Preview
+
+Interactive Scalar documentation is generated from the OpenAPI spec at `/scalar/v1` for each service.
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/e9499023-9dbf-493f-93ff-7ae57b2a61cb" alt="Tasks API docs" width="600" />
+  <br/>
+  <em>TasksService Scalar UI</em>
+</p>
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/8fd0373c-49b0-4f1d-8f4f-c6945eedbbd6" alt="Auth API docs" width="600" />
+  <br/>
+  <em>IdentityService Scalar UI</em>
+</p>
 
 ---
 
